@@ -1,0 +1,24 @@
+{
+  "name": "litera",
+  "version": "1.0.0",
+  "description": "manter dados dados dos trabalhos",
+  "homepage": "https://github.com/JoaoMarcusAndrade/Litera#readme",
+  "bugs": {
+    "url": "https://github.com/JoaoMarcusAndrade/Litera/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoaoMarcusAndrade/Litera.git"
+  },
+  "license": "ISC",
+  "author": "João Marcus, Julia Marcelino, Rafael Sampaio, Lucas Cobucci",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "nodemon": "^3.1.10"
+  }
+}
