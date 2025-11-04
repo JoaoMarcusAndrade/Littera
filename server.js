@@ -4,6 +4,7 @@ import routes from './routes.js';
 import cookieParser from 'cookie-parser';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import { sequelize } from './models.js';
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.use(cors({
 
 app.use(cookieParser());
 app.use(express.json());
-
+ 
 // Arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
@@ -27,3 +28,11 @@ app.listen(PORT, () => {
   //powershell -ExecutionPolicy Bypass
   console.log(`Server rodando em http://localhost:${PORT}`);
 });
+(async () => {
+  try {
+    await sequelize.sync({ alter: true }); // cria/atualiza as tabelas
+    console.log("Banco de dados sincronizado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao sincronizar o banco:", error);
+  }
+})();
