@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { fileURLToPath } from 'url';
 import { Usuario } from "./models.js";
 
-export const router = express.Router();
+const router = express.Router();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,3 +60,5 @@ router.get("/check-auth", async (req, res) => {
     res.status(500).json({ error: 'Erro ao verificar autenticação' });
   }
 });
+
+export default router;
