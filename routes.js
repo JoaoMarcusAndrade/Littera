@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import bcrypt from "bcryptjs";
 import { fileURLToPath } from 'url';
-import { Usuarios } from "./models.js";
+import { Usuario } from "./models.js";
 
 const router = express.Router();
 
