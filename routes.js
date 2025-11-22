@@ -14,7 +14,7 @@ router.use(express.static(path.join(__dirname, 'public-desktop')));
 
 // Arquivos estáticos-mobile
 router.use('/mobile/', express.static(path.join(__dirname, 'public-mobile')));
-router.get('/mobile/*', (req, res) => {
+router.get('/mobile/:path*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public-mobile', 'index.html'));
 });
 // Rotas SPA
