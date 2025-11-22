@@ -13,10 +13,13 @@ const __dirname = path.dirname(__filename);
 router.use(express.static(path.join(__dirname, 'public-desktop')));
 
 // Arquivos estáticos-mobile
-router.use('/mobile/', express.static(path.join(__dirname, 'public-mobile')));
-router.get('/mobile/:path*', (req, res) => {
+router.use('/mobile', express.static(path.join(__dirname, 'public-mobile')));
+
+// SPA mobile
+router.get('/mobile/:rest(.*)', (req, res) => {
   res.sendFile(path.join(__dirname, 'public-mobile', 'index.html'));
 });
+
 // Rotas SPA
 const spaRoutes = [
   '/', '/login', '/cadastro'
