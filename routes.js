@@ -9,9 +9,14 @@ const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Arquivos estáticos
-router.use(express.static(path.join(__dirname, 'public')));
+// Arquivos estáticos-desktop
+router.use(express.static(path.join(__dirname, 'public-desktop')));
 
+// Arquivos estáticos-mobile
+router.use('/mobile/', express.static(path.join(__dirname, 'public-mobile')));
+router.get('/mobile/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public-mobile', 'index.html'));
+});
 // Rotas SPA
 const spaRoutes = [
   '/', '/login', '/cadastro'
@@ -19,7 +24,7 @@ const spaRoutes = [
 
 spaRoutes.forEach(route => {
   router.get(route, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public-desktop', 'index.html'));
   });
 });
 
