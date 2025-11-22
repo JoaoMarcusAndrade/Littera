@@ -41,23 +41,29 @@ function closePopup() {
   }, 180);
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+  if (location.pathname === "/login") showLogin();
+  else if (location.pathname === "/cadastro") showCadastro();
+});
+
+window.addEventListener("popstate", () => {
+  if (location.pathname === "/login") showLogin();
+  else if (location.pathname === "/cadastro") showCadastro();
+});
+
+
 function showLogin() {
   if (loginScreen) loginScreen.classList.remove("hidden");
   if (cadastroScreen) cadastroScreen.classList.add("hidden");
+  history.pushState(null, null, "/login");
 }
 
 function showCadastro() {
   if (cadastroScreen) cadastroScreen.classList.remove("hidden");
   if (loginScreen) loginScreen.classList.add("hidden");
+  history.pushState(null, null, "/cadastro");
 }
 
-function getUsuarios() {
-  return JSON.parse(localStorage.getItem("usuarios") || "[]");
-}
-
-function saveUsuarios(arr) {
-  localStorage.setItem("usuarios", JSON.stringify(arr));
-}
 
 if (loginIcon) loginIcon.addEventListener("click", openPopup);
 if (closePopupBtn) closePopupBtn.addEventListener("click", closePopup);
@@ -89,7 +95,7 @@ if (switchToLogin) {
 }
 
 if (btnCadastrar) {
-  btnCadastrar.addEventListener("click", () => {
+  btnCadastrar.addEventListener("click", async () => {
     const nome = (cadNome?.value || "").trim();
     const email = (cadEmail?.value || "").trim().toLowerCase();
     const telefone = (cadTelefone?.value || "").trim();
@@ -105,26 +111,35 @@ if (btnCadastrar) {
       return;
     }
 
-    const usuarios = getUsuarios();
-    if (usuarios.some(u => u.email === email)) {
-      alert("Email já cadastrado!");
-      return;
-    }
+    try{
+      const response = await fetch("/api/cadastro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome, email, telefone, senha })
+      });
 
-    usuarios.push({ nome, email, telefone, senha });
-    saveUsuarios(usuarios);
-    alert("Cadastro realizado! Faça login.");
-    showLogin();
-    if (cadNome) cadNome.value = "";
-    if (cadEmail) cadEmail.value = "";
-    if (cadTelefone) cadTelefone.value = "";
-    if (cadSenha) cadSenha.value = "";
-    if (loginEmail) loginEmail.focus();
+      const data = await response.json();
+
+      if (response.ok){
+        alert("Cadastro realizado! Faça login.");
+        showLogin();
+        if (cadNome) cadNome.value = "";
+        if (cadEmail) cadEmail.value = "";
+        if (cadTelefone) cadTelefone.value = "";
+        if (cadSenha) cadSenha.value = "";
+        if (loginEmail) loginEmail.focus();
+      } else {
+        alert(data.error || "Erro ao cadastrar");
+      }
+    } catch (err) {
+      alert("Erro de conexão com o servidor");
+      console.error(err)
+    }
   });
 }
 
 if (btnLogin) {
-  btnLogin.addEventListener("click", () => {
+  btnLogin.addEventListener("click", async () => {
     const email = (loginEmail?.value || "").trim().toLowerCase();
     const senha = (loginSenha?.value || "").trim();
 
@@ -133,18 +148,26 @@ if (btnLogin) {
       return;
     }
 
-    const usuarios = getUsuarios();
-    const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+    try{
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha })
+      });
 
-    if (!usuario) {
-      alert("Email ou senha inválidos!");
-      return;
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Bem vindo, " + data.usuario.nome_user + "!");
+        closePopup();
+        if (userNameDisplay) userNameDisplay.textContent = data.usuario.nome_user;
+      } else {
+        alert(data || "Erro no login");
+      }
+    } catch (err) {
+      alert("Erro de conexão com o servidor");
+      console.error(err);
     }
-
-    localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
-    if (userNameDisplay) userNameDisplay.textContent = usuario.nome;
-    alert("Bem-vindo, " + usuario.nome + "!");
-    closePopup();
   });
 }
 
@@ -152,9 +175,4 @@ if (loginEmail) {
   loginEmail.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && btnLogin) btnLogin.click();
   });
-}
-
-const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado") || "null");
-if (usuarioLogado && userNameDisplay) {
-  userNameDisplay.textContent = usuarioLogado.nome;
 }
