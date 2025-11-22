@@ -27,7 +27,7 @@ const Livro = sequelize.define("LIVRO", {
 const Usuario = sequelize.define("USUARIO", {
   id_usuario: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   nome_user: { type: DataTypes.STRING(100), allowNull: false },
-  email: { type: DataTypes.STRING(255) },
+  email: { type: DataTypes.STRING(255), unique: true, validade: { isEmail: true}},
   telefone: { type: DataTypes.CHAR(11) },
   permissao: { type: DataTypes.CHAR(1), allowNull: false, defaultValue: "U" }, // U = usuario, A = admin
   senha: { type: DataTypes.STRING, allowNull: false }

@@ -33,6 +33,11 @@ router.post('/api/cadastro', async (req, res) => {
       return res.status(400).json({ error: 'Faltam campos obrigatórios' });
     }
 
+    const userExists = await Usuario.findOne({ where: { email } });
+    if (userExists) {
+      return res.status(400).json({ error: 'Usuário já existente'})
+    }
+
     const hash = await bcrypt.hash(senha, 10);
 
     const usuario = await Usuario.create({
