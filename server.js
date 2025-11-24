@@ -19,9 +19,16 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
  
-// Arquivos estáticos
-app.use(express.static(path.join(__dirname, 'public-desktop')));
-app.use('/mobile', express.static(path.join(__dirname, 'public-mobile')));
+
+// Arquivos estáticos-desktop
+router.use(express.static(path.join(__dirname, 'public-desktop')));
+
+// Arquivos estáticos-mobile
+router.use('/mobile', express.static(path.join(__dirname, 'public-mobile')));
+// SPA mobile
+router.get(/^\/mobile(\/.*)?$/, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public-mobile', 'index.html'));
+});
 
 app.use('/', routes);
 
