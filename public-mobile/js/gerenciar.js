@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           <h3>${livro.titulo}</h3>
           <p><strong>Autor:</strong> ${livro.autor || ''}</p>
           <p><strong>Editora:</strong> ${livro.editora || ''}</p>
-          <p><strong>ISBN:</strong> ${livro.isbn || '—'}</p>
-          <p><strong>ISBN:</strong> ${livro.preço}</p>
+          <p><strong>ISBN:</strong> ${livro.ISBN || '—'}</p>
+          <p><strong>Preço:</strong> ${livro.preco}</p>
           <div class="acoes">
             <button class="btn-editar" data-index="${i}"><i class="fa-solid fa-pen"></i> Editar</button>
             <button class="btn-excluir" data-index="${i}"><i class="fa-solid fa-trash"></i> Excluir</button>
