@@ -72,7 +72,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
   });
+  const imagemInput = document.getElementById("editar-imagem");
+  const preview = document.getElementById("preview");
 
+  if (imagemInput && preview) {
+    imagemInput.addEventListener("change", () => {
+      const arquivo = imagemInput.files[0];
+      if (arquivo) {
+        const leitor = new FileReader();
+        leitor.onload = (e) => (preview.src = e.target.result);
+        leitor.readAsDataURL(arquivo);
+      }
+    });
+  }
   // ---------- abrir modal editar ----------
   listaLivros.addEventListener("click", (e) => {
     if (e.target.closest(".btn-editar")) {
@@ -82,10 +94,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       document.getElementById("editar-titulo").value = livro.titulo;
       document.getElementById("editar-autor").value = livro.autor;
+      document.getElementById("editar-nacionalidade").value = livro.nacionalidade;
       document.getElementById("editar-editora").value = livro.editora;
+      document.getElementById("editar-paginas").value = livro.paginas;
+      document.getElementById("editar-preco").value = livro.preco;
       document.getElementById("editar-isbn").value = livro.ISBN;
+      document.getElementById("editar-genero").value = livro.genero;
+      document.getElementById("editar-estado_concervacao").value = livro.estado_conservacao;
       document.getElementById("editar-descricao").value = livro.descricao;
+      document.getElementById("editar-metodo_aquisicao").value = livro.metodo_aquisicao;
 
+      preview.src = livro.foto_url || "./IMG/placeholder.png"
+
+      
       modal.classList.add("active");
       document.body.style.overflow = "hidden";
     }
@@ -100,19 +121,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   function fecharModal() {
     modal.classList.remove("active");
     document.body.style.overflow = "";
-  }
-  const imagemInput = document.getElementById("editar-imagem");
-  const preview = document.getElementById("preview");
-
-  if (imagemInput && preview) {
-    imagemInput.addEventListener("change", () => {
-      const arquivo = imagemInput.files[0];
-      if (arquivo) {
-        const leitor = new FileReader();
-        leitor.onload = (e) => (preview.src = e.target.result);
-        leitor.readAsDataURL(arquivo);
-      }
-    });
   }
 
   // ---------- salvar alterações ----------
