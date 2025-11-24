@@ -88,6 +88,24 @@ router.get('/api/livro', async (req, res) => { // puxar livros
   }
 });
 
+router.delete('/api/livro', async (req, res) => {
+  try {
+  const { id } = req.params;
+
+  const livro = await Livro.findByPk(id);
+
+  if (!livro) {
+    return res.status(404).json({ error: "Livro não encontrado" });
+  }
+
+  await livro.destroy();
+    res.json({ ok: true, message: "Livro deletado com sucesso" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao deletar livro" });
+  }
+});
+
 //  ROTAS DA API DESKTOP
 router.post('/api/cadastro', async (req, res) => {
   try {
