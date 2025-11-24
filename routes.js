@@ -88,7 +88,7 @@ router.get('/api/livro', async (req, res) => { // puxar livros
   }
 });
 
-router.delete('/api/livro', async (req, res) => {
+router.delete('/api/livro/:id', async (req, res) => {
   try {
   const { id } = req.params;
 

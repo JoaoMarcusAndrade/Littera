@@ -2,7 +2,11 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("[Littera] Gerenciar carregado");
-
+  
+  const menuBtn = document.getElementById("menu-btn");
+  const sidebar = document.getElementById("sidebar");
+  const closeBtn = document.getElementById("close-btn");
+  const overlay = document.getElementById("overlay");
   const listaLivros = document.getElementById("lista-livros");
   const modal = document.getElementById("modal-editar");
   const fecharEditar = document.getElementById("fechar-editar");
