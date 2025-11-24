@@ -45,13 +45,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderizar();
 
   // ---------- excluir ----------
-  listaLivros.addEventListener("click", (e) => {
+  listaLivros.addEventListener("click", async (e) => {
     if (e.target.closest(".btn-excluir")) {
       const index = e.target.closest(".btn-excluir").dataset.index;
       if (confirm("Deseja realmente excluir este livro?")) {
-        livros.splice(index, 1);
-        localStorage.setItem("livros", JSON.stringify(livros));
-        renderizar();
+        const id = livros[index].id;
+        try {
+          const response = await fetch('/api/livro/${id}', {
+            method: "DELETE"
+          });
+
+          if (!response.ok) throw new Error("Falha no delete");
+
+          livros.splice(index, 1); // remove da lista local
+          renderizar();
+          
+        } catch (err) {
+          console.error(err);
+          alert('Erro ao excluir livro')
+
+        }
       }
     }
   });
