@@ -62,8 +62,16 @@ router.post('/api/livro', async (req, res) => {
   }
 })
 
-router.get('/api/livro', async (req, res) => {
-
+router.get('/api/livro', async (req, res) => { // puxar livros
+  try{
+    const livros = await Livro.findAll({
+      order: [['createdAt', 'DESC']]//pega todos os livros do mais rescente ao mais antigo
+    });
+    res.json(livros);
+  } catch (err){
+    console.error(err);
+    res.status(500).json({ error: "Erro ao processar dados"});
+  }
 });
 
 //  ROTAS DA API DESKTOP
