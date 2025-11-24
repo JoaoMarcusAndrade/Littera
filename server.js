@@ -19,13 +19,6 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
  
-
-// Arquivos estáticos-desktop
-router.use(express.static(path.join(__dirname, 'public-desktop')));
-
-// Arquivos estáticos-mobile
-router.use('/mobile', express.static(path.join(__dirname, 'public-mobile')));
-
 app.use('/', routes);
 
 const PORT = 3000;
