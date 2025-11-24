@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (e.target.closest(".btn-excluir")) {
       const index = e.target.closest(".btn-excluir").dataset.index;
       if (confirm("Deseja realmente excluir este livro?")) {
-        const id = livros[index].id;
+        const id = livros[index].id_livro;
         try {
           const response = await fetch(`/api/livro/${id}`, {
             method: "DELETE"
