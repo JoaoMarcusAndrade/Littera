@@ -53,11 +53,47 @@
       <span id="fechar-editar" class="fechar">&times;</span>
       <h2>Editar Livro</h2>
       <form id="form-editar">
+
+        <div class="imagem-upload">
+          <label for="editar-imagem">
+            <img id="preview" src="./IMG/placeholder.png" alt="Prévia da capa">
+            <span>Escolher imagem</span>
+            <input type="file" id="editar-imagem" accept="image/*" hidden>
+          </label>
+        </div>
+        <!-- titulo -->
         <input type="text" id="editar-titulo" placeholder="Título" required />
+
+        <!-- autor -->
         <input type="text" id="editar-autor" placeholder="Autor" required />
+
+        <!-- nacionalidade -->
+        <input type="text" id="editar-nacionalidade" placeholder="Nacionalidade" />
+
+        <!-- editora -->
         <input type="text" id="editar-editora" placeholder="Editora" required />
+
+        <!-- paginas -->
+        <input type="number" id="editar-paginas" placeholder="Número de páginas" />
+
+        <!-- preco -->
+        <input type="number" step="0.01" id="editar-preco" placeholder="Preço" />
+
+        <!-- ISBN -->
         <input type="text" id="editar-isbn" placeholder="ISBN" />
+
+        <!-- genero -->
+        <input type="text" id="editar-genero" placeholder="Gênero" />
+
+        <!-- estado_concervacao -->
+        <input type="text" id="editar-estado_concervacao" placeholder="Estado de conservação" />
+
+        <!-- descricao -->
         <textarea id="editar-descricao" placeholder="Descrição"></textarea>
+
+        <!-- metodo_aquisicao -->
+        <input type="text" id="editar-metodo_aquisicao" placeholder="Método de aquisição" />
+
         <button type="submit" class="btn-salvar">Salvar Alterações</button>
       </form>
     </div>

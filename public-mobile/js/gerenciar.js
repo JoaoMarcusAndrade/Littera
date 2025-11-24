@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("editar-titulo").value = livro.titulo;
       document.getElementById("editar-autor").value = livro.autor;
       document.getElementById("editar-editora").value = livro.editora;
-      document.getElementById("editar-isbn").value = livro.isbn;
+      document.getElementById("editar-isbn").value = livro.ISBN;
       document.getElementById("editar-descricao").value = livro.descricao;
 
       modal.classList.add("active");
@@ -101,6 +101,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     modal.classList.remove("active");
     document.body.style.overflow = "";
   }
+  const imagemInput = document.getElementById("editar-imagem");
+  const preview = document.getElementById("preview");
+
+  if (imagemInput && preview) {
+    imagemInput.addEventListener("change", () => {
+      const arquivo = imagemInput.files[0];
+      if (arquivo) {
+        const leitor = new FileReader();
+        leitor.onload = (e) => (preview.src = e.target.result);
+        leitor.readAsDataURL(arquivo);
+      }
+    });
+  }
 
   // ---------- salvar alterações ----------
   formEditar.addEventListener("submit", async (e) => {
@@ -111,9 +124,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       ...livros[livroEditandoIndex],
       titulo: document.getElementById("editar-titulo").value,
       autor: document.getElementById("editar-autor").value,
+      nacionalidade: document.getElementById("editar-nacionalidade").value,
       editora: document.getElementById("editar-editora").value,
-      isbn: document.getElementById("editar-isbn").value,
+      paginas: document.getElementById("editar-paginas").value,
+      preco: document.getElementById("editar-preco").value,
+      ISBN: document.getElementById("editar-isbn").value,
+      genero: document.getElementById("editar-genero").value,
+      estado_conservacao: document.getElementById("editar-estado_concervacao").value,
       descricao: document.getElementById("editar-descricao").value,
+      metodo_aquisicao: document.getElementById("editar-metodo_aquisicao").value,
+      foto_url: preview.src
     };
 
     livros[livroEditandoIndex] = atualizado;
