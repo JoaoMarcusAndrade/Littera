@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("[Littera] Gerenciar carregado");
-  
+
   const menuBtn = document.getElementById("menu-btn");
   const sidebar = document.getElementById("sidebar");
   const closeBtn = document.getElementById("close-btn");
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ---------- salvar alterações ----------
-  formEditar.addEventListener("submit", (e) => {
+  formEditar.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (livroEditandoIndex === null) return;
 
@@ -117,7 +117,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     livros[livroEditandoIndex] = atualizado;
-    localStorage.setItem("livros", JSON.stringify(livros));
+    const id = livros[livroEditandoIndex].id_livro;
+
+    const response = await fetch(`/api/livro/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(atualizado)
+    });
+
+    if (!response.ok) {
+      alert("Erro ao atualizar livro");
+      return;
+    }
 
     alert("Livro atualizado com sucesso!");
     fecharModal();
@@ -125,7 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
 
-   // ====== MENU LATERAL ======
+  // ====== MENU LATERAL ======
   if (menuBtn && sidebar && closeBtn && overlay) {
     menuBtn.addEventListener("click", () => {
       sidebar.style.width = "320px";
