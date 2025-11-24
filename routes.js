@@ -22,16 +22,17 @@ router.get(/^\/mobile(\/.*)?$/, (req, res) => {
   res.sendFile(path.join(__dirname, 'public-mobile', 'index.html'));
 });
 
+// Rotas SPA
+const spaRoutes = [
+  '/', '/login', '/cadastro'
+];
+
 spaRoutes.forEach(route => {
   router.get(route, (req, res) => {
     res.sendFile(path.join(__dirname, 'public-desktop', 'index.html'));
   });
 });
 
-// Rotas SPA
-const spaRoutes = [
-  '/', '/login', '/cadastro'
-];
 
 //  ROTAS DA API MOBILE
 router.post('/api/livro', async (req, res) => {

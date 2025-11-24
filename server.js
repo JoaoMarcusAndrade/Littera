@@ -2,14 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import routes from './routes.js';
 import cookieParser from 'cookie-parser';
-import { fileURLToPath } from 'url';
-import path from 'path';
 import { sequelize } from './models.js';
 
 const app = express();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 app.use(cors({
   origin: ['http://localhost:3000'],
