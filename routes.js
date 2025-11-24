@@ -64,7 +64,17 @@ router.post('/api/livro', async (req, res) => {
 
 router.get('/api/livro', async (req, res) => { // puxar livros
   try{
+
+    const { q } = req.query; //texto de pesquisa opcional
+
+    const where = {};
+
+    if (q) {
+      where.titulo = { [Op.iLike]: `%${q}%`};
+    }
+
     const livros = await Livro.findAll({
+      where,
       order: [['createdAt', 'DESC']]//pega todos os livros do mais rescente ao mais antigo
     });
     res.json(livros);
