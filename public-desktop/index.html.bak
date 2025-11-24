@@ -30,14 +30,14 @@
         <!-- Overlay da pesquisa -->
         <div class="search-overlay" id="searchOverlay"></div>
 
-        <!-- Caixa de pesquisa na navbar -->
-        <div class="search-container">
-          <div class="lupa-icon" id="searchIcon">
-            <img src="./img/lupa2.0.png" alt="Buscar">
-          </div>
-          <div class="search-box" id="searchBox">
-            <input type="text" placeholder="Procure por livros…" />
-          </div>
+        <!-- Caixa de pesquisa escondida -->
+  <div class="search-box" id="searchBox">
+    <input type="text" placeholder="Procure por livros…" />
+  </div>
+
+        <div class="lupa-icon" id="searchIcon">
+          <img src="./img/lupa2.0.png" alt="Buscar">
+          
         </div>
 
         <img src="./img/carrinho2.0.png" id="carrinho-icon" class="carrinho" onclick="openCart()">
