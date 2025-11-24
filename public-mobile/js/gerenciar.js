@@ -8,9 +8,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const fecharEditar = document.getElementById("fechar-editar");
   const formEditar = document.getElementById("form-editar");
 
-  let response = await fetch('api/livro');
+  let response = await fetch('/api/livro');
   let livros = await response.json();
-  
+
   let livroEditandoIndex = null;
 
   // ---------- renderizar ----------
