@@ -1,16 +1,14 @@
 import express from 'express';
 import path from 'path';
 import bcrypt from "bcryptjs";
+import { fileURLToPath } from 'url';
 import { Usuario, Livro } from "./models.js";
 import { Op } from 'sequelize';
 
 const router = express.Router();
 
-// Rotas SPA
-const spaRoutes = [
-  '/', '/login', '/cadastro'
-];
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Arquivos estáticos-desktop
 router.use(express.static(path.join(__dirname, 'public-desktop')));
@@ -29,6 +27,12 @@ spaRoutes.forEach(route => {
     res.sendFile(path.join(__dirname, 'public-desktop', 'index.html'));
   });
 });
+
+// Rotas SPA
+const spaRoutes = [
+  '/', '/login', '/cadastro'
+];
+
 //  ROTAS DA API MOBILE
 router.post('/api/livro', async (req, res) => {
   try {
