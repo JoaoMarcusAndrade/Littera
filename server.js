@@ -20,7 +20,9 @@ app.use(cookieParser());
 app.use(express.json());
  
 // Arquivos estáticos
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public-desktop')));
+app.use('/mobile', express.static(path.join(__dirname, 'public-mobile')));
+
 app.use('/', routes);
 
 const PORT = 3000;
