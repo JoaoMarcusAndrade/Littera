@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (confirm("Deseja realmente excluir este livro?")) {
         const id = livros[index].id;
         try {
-          const response = await fetch('/api/livro/${id}', {
+          const response = await fetch(`/api/livro/${id}`, {
             method: "DELETE"
           });
 
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
           livros.splice(index, 1); // remove da lista local
           renderizar();
-          
+
         } catch (err) {
           console.error(err);
           alert('Erro ao excluir livro')
