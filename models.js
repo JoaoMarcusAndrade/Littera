@@ -14,7 +14,7 @@ const Livro = sequelize.define("LIVRO", {
   autor: { type: DataTypes.STRING(100) },
   nacionalidade: { type: DataTypes.STRING(20) },
   editora: { type: DataTypes.STRING(30) },
-  paginas: { type: DataTypes.SMALLINT},
+  paginas: { type: DataTypes.SMALLINT },
   preco: { type: DataTypes.DECIMAL(10, 2) },
   ISBN: { type: DataTypes.CHAR(13) },
   genero: { type: DataTypes.STRING(40) },

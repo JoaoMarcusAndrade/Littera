@@ -1,6 +1,6 @@
 // gerenciar.js — controle da página de gerenciamento
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   console.log("[Littera] Gerenciar carregado");
 
   const listaLivros = document.getElementById("lista-livros");
@@ -8,7 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const fecharEditar = document.getElementById("fechar-editar");
   const formEditar = document.getElementById("form-editar");
 
-  let livros = JSON.parse(localStorage.getItem("livros")) || [];
+  let livros = await fetch('api/livro', {
+    method: "GET",
+    header: { "Content-Type": "application/json"},
+    body: JSON.stringify({ foto_url, titulo, autor, editora, isbn})
+  });
   let livroEditandoIndex = null;
 
   // ---------- renderizar ----------
@@ -23,12 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = document.createElement("div");
       card.className = "card-livro";
       card.innerHTML = `
-        <img src="${livro.imagem || './IMG/placeholder.png'}" alt="${livro.titulo}" class="capa-livro">
+        <img src="${livro.foto_url || './IMG/placeholder.png'}" alt="${livro.titulo}" class="capa-livro">
         <div class="info-livro">
           <h3>${livro.titulo}</h3>
-          <p><strong>Autor:</strong> ${livro.autor}</p>
-          <p><strong>Editora:</strong> ${livro.editora}</p>
+          <p><strong>Autor:</strong> ${livro.autor || ''}</p>
+          <p><strong>Editora:</strong> ${livro.editora || ''}</p>
           <p><strong>ISBN:</strong> ${livro.isbn || '—'}</p>
+          <p><strong>ISBN:</strong> ${livro.preço}</p>
           <div class="acoes">
             <button class="btn-editar" data-index="${i}"><i class="fa-solid fa-pen"></i> Editar</button>
             <button class="btn-excluir" data-index="${i}"><i class="fa-solid fa-trash"></i> Excluir</button>

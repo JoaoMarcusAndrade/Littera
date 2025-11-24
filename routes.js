@@ -62,6 +62,10 @@ router.post('/api/livro', async (req, res) => {
   }
 })
 
+router.get('/api/livro', async (req, res) => {
+
+});
+
 //  ROTAS DA API DESKTOP
 router.post('/api/cadastro', async (req, res) => {
   try {
