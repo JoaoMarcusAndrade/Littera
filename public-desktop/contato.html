@@ -6,6 +6,7 @@
     <title>Contato - LITTERA</title>
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/cart.css">
+    <link rel="stylesheet" href="./css/checkout-modal.css">
     <link rel="icon" type="image/x-icon" href="./img/icones/favicon.ico">
     <style>
         main {
@@ -475,14 +476,17 @@
             <span class="navbar-title">LITTERA</span>
 
             <div class="nav-icons">
-                <!-- Caixa de pesquisa escondida -->
+                <!-- Overlay da pesquisa -->
                 <div class="search-overlay" id="searchOverlay"></div>
-                <div class="search-box" id="searchBox">
-                    <input type="text" placeholder="Procure por livros…" />
-                </div>
 
-                <div class="lupa-icon" id="searchIcon">
+                <!-- Caixa de pesquisa na navbar -->
+                <div class="search-container">
+                  <div class="lupa-icon" id="searchIcon">
                     <img src="./img/lupa2.0.png" alt="Buscar">
+                  </div>
+                  <div class="search-box" id="searchBox">
+                    <input type="text" placeholder="Procure por livros…" />
+                  </div>
                 </div>
 
                 <img src="./img/carrinho2.0.png" id="carrinho-icon" class="carrinho" onclick="openCart()">
@@ -624,6 +628,32 @@
         </div>
     </footer>
 
+    <!-- CARRINHO MODAL -->
+    <div id="cart-modal" class="cart-modal">
+        <div class="cart-modal-overlay">
+            <div class="cart-modal-content">
+                <div class="cart-modal-header">
+                    <h2>Carrinho de compras</h2>
+                    <span class="close-cart" id="close-cart">&times;</span>
+                </div>
+                <div class="cart-modal-body">
+                    <div id="cart-items-container"></div>
+                </div>
+                <div class="cart-modal-footer">
+                    <div class="cart-footer-left">
+                        <input type="checkbox" id="cart-select-all">
+                        <label for="cart-select-all">Selecionar tudo</label>
+                    </div>
+                    <div class="cart-footer-middle">
+                        <span>Subtotal (1 produto): <strong id="cart-total">R$14,99</strong></span>
+                    </div>
+                    <button class="btn-checkout">Finalizar Pedido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="./js/script.js"></script>
+    <script src="./js/checkout-modal.js"></script>
 </body>
 </html>
