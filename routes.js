@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import bcrypt from "bcryptjs";
-import { fileURLToPath } from 'url';
 import { Usuario, Livro } from "./models.js";
 import { Op } from 'sequelize';
 
@@ -11,6 +10,11 @@ const router = express.Router();
 const spaRoutes = [
   '/', '/login', '/cadastro'
 ];
+
+// SPA mobile
+router.get(/^\/mobile(\/.*)?$/, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public-mobile', 'index.html'));
+});
 
 spaRoutes.forEach(route => {
   router.get(route, (req, res) => {
