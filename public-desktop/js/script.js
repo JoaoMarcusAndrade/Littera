@@ -639,11 +639,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!livro.foto_url) return;
 
         const card = document.createElement("div");
+
+        
+        const preco = parseFloat(String(livro.preco).replace(",", "."));
+
         card.className = "prod-card";
         card.innerHTML = `
         <img src="${livro.foto_url}" alt="${livro.titulo}" class="capa-livro">
         <p class="titulo">${livro.titulo}</p>
-        <p class="preco">R$ ${(livro.preco || 0).toFixed(2)}</p>
+        <p class="preco">R$ ${(!isNaN(preco) ? preco : 0).toFixed(2)}</p>
       `;
 
         aplicarCliqueLivro(card, livro);
@@ -682,11 +686,14 @@ async function carregarFiccao() {
       if (!livro.foto_url) return;
 
       const card = document.createElement("div");
+
+      const preco = parseFloat(String(livro.preco).replace(",", "."));
+
       card.className = "prod-card";
       card.innerHTML = `
         <img src="${livro.foto_url}" alt="${livro.titulo}" class="capa-livro">
         <p class="titulo">${livro.titulo}</p>
-        <p class="preco">R$ ${(livro.preco || 0).toFixed(2)}</p>
+        <p class="preco">R$ ${(!isNaN(preco) ? preco : 0).toFixed(2)}</p>
       `;
 
       aplicarCliqueLivro(card, livro);
