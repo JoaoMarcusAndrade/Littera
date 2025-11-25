@@ -6,10 +6,20 @@
 // CARRINHO - Funções globais
 // =======================================================
 function openCart() {
+  const user = getLoggedUser();
+  if (!user) {
+    openPopup();
+    return;
+  }
+
+  console.log('[openCart] Abrindo carrinho');
   const modal = document.getElementById('cart-modal');
   if (modal) {
+    console.log('[openCart] Modal encontrado, adicionando classe show');
     modal.classList.add('show');
     renderCart();
+  } else {
+    console.error('[openCart] Modal NÃO encontrado!');
   }
 }
 
@@ -35,6 +45,12 @@ function updateCartCount() {
 }
 
 function addToCart(book, qty) {
+  const user = getLoggedUser();
+  if (!user) {
+    openPopup();
+    return;
+  }
+
   const cart = getCart();
   const existing = cart.find(item => item.title === book.title && item.authors?.join() === book.authors?.join());
   if (existing) {
@@ -58,7 +74,135 @@ function addToCart(book, qty) {
   }
 }
 
+function renderCart() {
+  const cart = getCart();
+  const container = document.getElementById('cart-items-container');
 
+  if (!container) {
+    console.warn('[renderCart] Container não encontrado');
+    return;
+  }
+
+  if (cart.length === 0) {
+    container.innerHTML = '<div class="cart-items-empty">Seu carrinho está vazio</div>';
+    updateCartTotal(0);
+    return;
+  }
+
+  let html = '';
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.preco?.replace('R$', '').replace(',', '.')) || 0;
+    const itemTotal = price * item.quantity;
+    total += itemTotal;
+
+    const capa = item.capa || item.imagem || 'https://via.placeholder.com/100x140.png?text=Sem+Capa';
+    const authors = Array.isArray(item.authors) ? item.authors.join(', ') : (item.authors || 'Autor desconhecido');
+
+    html += `
+      <div class="cart-item" data-index="${index}">
+        <input type="checkbox" class="cart-item-checkbox" data-index="${index}">
+        <img src="${capa}" alt="${item.title}" class="cart-item-image">
+        <div class="cart-item-info">
+          <div class="cart-item-title">${item.title}</div>
+          <div class="cart-item-author">por ${authors}</div>
+        </div>
+        <div class="cart-item-price">${item.preco || 'R$ 0,00'}</div>
+        <div class="cart-item-qty">
+          <button class="qty-btn qty-minus" data-index="${index}">−</button>
+          <input type="number" class="qty-input" value="${item.quantity}" data-index="${index}" min="1">
+          <button class="qty-btn qty-plus" data-index="${index}">+</button>
+        </div>
+        <button class="cart-item-remove" data-index="${index}" title="Remover item">🗑</button>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+  updateCartTotal(total);
+  attachCartEventListeners();
+}
+
+function updateCartTotal(total) {
+  const totalEl = document.getElementById('cart-total');
+  const footerMiddle = document.querySelector('.cart-footer-middle span');
+  const count = getCart().length;
+
+  if (totalEl) {
+    totalEl.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+  }
+
+  if (footerMiddle) {
+    footerMiddle.innerHTML = `Subtotal (${count} produto${count !== 1 ? 's' : ''}): <strong id="cart-total">R$ ${total.toFixed(2).replace('.', ',')}</strong>`;
+  }
+}
+
+function attachCartEventListeners() {
+  // Remove buttons
+  document.querySelectorAll('.cart-item-remove').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = e.target.dataset.index;
+      const cart = getCart();
+      cart.splice(index, 1);
+      saveCart(cart);
+      updateCartCount();
+      renderCart();
+    });
+  });
+
+  // Qty minus
+  document.querySelectorAll('.qty-minus').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = e.target.dataset.index;
+      const cart = getCart();
+      if (cart[index].quantity > 1) {
+        cart[index].quantity--;
+        saveCart(cart);
+        updateCartCount();
+        renderCart();
+      }
+    });
+  });
+
+  // Qty plus
+  document.querySelectorAll('.qty-plus').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const index = e.target.dataset.index;
+      const cart = getCart();
+      cart[index].quantity++;
+      saveCart(cart);
+      updateCartCount();
+      renderCart();
+    });
+  });
+
+  // Qty input
+  document.querySelectorAll('.qty-input').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const index = e.target.dataset.index;
+      let value = parseInt(e.target.value) || 1;
+      if (value < 1) value = 1;
+
+      const cart = getCart();
+      cart[index].quantity = value;
+      saveCart(cart);
+      updateCartCount();
+      renderCart();
+    });
+  });
+
+  // Select all checkbox
+  const selectAllCheckbox = document.getElementById('cart-select-all');
+  if (selectAllCheckbox) {
+    selectAllCheckbox.addEventListener('change', (e) => {
+      const isChecked = e.target.checked;
+      document.querySelectorAll('.cart-item-checkbox').forEach(checkbox => {
+        checkbox.checked = isChecked;
+      });
+    });
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("[script] DOM carregado");
@@ -66,6 +210,41 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------- utilidades ----------
   const qs = (id) => document.getElementById(id);
   const safeText = (id, text) => { const el = qs(id); if (el) el.innerText = text; };
+
+  // =======================================================
+  // RESERVA DE LIVROS (3 DIAS)
+  // =======================================================
+  function getReservations() {
+    return JSON.parse(localStorage.getItem('reservas') || '[]');
+  }
+
+  function saveReservations(res) {
+    localStorage.setItem('reservas', JSON.stringify(res));
+  }
+
+  function reservarLivro(book) {
+    const reservas = getReservations();
+
+    const jaExiste = reservas.find(item => item.isbn === book.isbn);
+    if (jaExiste) {
+      alert("Este livro já está reservado!");
+      return;
+    }
+
+    const agora = new Date();
+    const expiracao = new Date(agora.getTime() + 3 * 24 * 60 * 60 * 1000);
+
+    reservas.push({
+      ...book,
+      reservadoEm: agora.toISOString(),
+      expiraEm: expiracao.toISOString()
+    });
+
+    saveReservations(reservas);
+
+    alert("Livro reservado por 3 dias!");
+  }
+
 
   // =======================================================
   // QUANTIDADE BUTTONS (+ e -)
@@ -138,6 +317,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =======================================================
+  // CARRINHO - EVENT LISTENERS
+  // =======================================================
+  const closeCartBtn = document.getElementById('close-cart');
+  const cartModal = document.getElementById('cart-modal');
+  const cartOverlay = document.querySelector('.cart-modal-overlay');
+
+  if (closeCartBtn) {
+    closeCartBtn.addEventListener('click', closeCart);
+  }
+
+  if (cartOverlay) {
+    cartOverlay.addEventListener('click', (e) => {
+      if (e.target === cartOverlay) {
+        closeCart();
+      }
+    });
+  }
+
+  // =======================================================
   // livro.html — CARREGAR LIVRO
   // =======================================================
   if (window.location.pathname.includes("livro.html")) {
@@ -147,6 +345,15 @@ document.addEventListener("DOMContentLoaded", () => {
       safeText("livro-titulo", "Livro não encontrado");
       return;
     }
+
+    const btnReservar = document.getElementById("btn-reservar");
+
+    if (btnReservar) {
+      btnReservar.addEventListener("click", () => {
+        reservarLivro(livro);
+      });
+    }
+
 
     const livro = JSON.parse(livroData);
 
@@ -163,6 +370,80 @@ document.addEventListener("DOMContentLoaded", () => {
       capaEl.src = livro.capa || livro.imageLinks?.thumbnail || livro.imagem || "https://via.placeholder.com/260x380.png?text=Sem+Capa";
 
     carregarSemelhantes(livro.authors?.[0] || livro.title);
+  }
+
+  // =======================================================
+  // CARROSSEL PRINCIPAL (BANNERS)
+  // =======================================================
+
+  function attachBannerCarousel() {
+    // SELECIONA O NOVO CONTÊINER
+    const containerEl = document.querySelector(".banner-carousel-container");
+    if (!containerEl) return;
+
+    // SELECIONA AS NOVAS CLASSES
+    const track = containerEl.querySelector(".banner-track");
+    const items = containerEl.querySelectorAll(".banner-item");
+    const dots = containerEl.querySelectorAll(".banner-dot");
+
+    if (items.length === 0 || dots.length === 0) return; // Garante que há itens e dots
+
+    let currentIndex = 0;
+    const intervalTime = 5000; // Troca a cada 5 segundos
+    let intervalId;
+
+    // Apenas o trecho da função com a mudança
+    function moveToSlide(index) {
+      // 1. Calcula a posição do slide em pixels
+
+      // --- MUDANÇA CRÍTICA AQUI ---
+      // Pega a largura do contêiner 'banner-carousel-container'
+      // O JS usa window.innerWidth se o elemento não for encontrado ou não tiver largura.
+      const containerWidth = containerEl.getBoundingClientRect().width;
+      // Se a largura for 0, tente obter a largura do primeiro item para uma estimativa segura.
+      if (containerWidth === 0 && items.length > 0) {
+        containerWidth = items[0].offsetWidth;
+      }
+
+      // Calcula a posição de translação
+      const position = -index * containerWidth;
+
+      // 2. Aplica o movimento ao track
+      track.style.transform = `translateX(${position}px)`;
+      // ... restante da função (dots)
+      // ...
+    }
+    // ... restante da função
+
+    function nextSlide() {
+      let newIndex = currentIndex + 1;
+      if (newIndex >= items.length) {
+        newIndex = 0;
+      }
+      moveToSlide(newIndex);
+    }
+
+    function startInterval() {
+      clearInterval(intervalId);
+      intervalId = setInterval(nextSlide, intervalTime);
+    }
+
+    // Anexa o evento de clique nos indicadores
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", () => {
+        moveToSlide(index);
+        startInterval(); // Reinicia o timer ao clicar
+      });
+    });
+
+    moveToSlide(0);
+    startInterval();
+
+    // Adiciona listener de redimensionamento para recalcular a posição
+    window.addEventListener('resize', () => {
+      // Reposiciona o slide visível com base na nova largura da tela
+      moveToSlide(currentIndex);
+    });
   }
 
   // =======================================================
@@ -343,8 +624,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!track) return;
 
     try {
+      // Consulta: /api/livro?genero=Romance
       const resposta = await fetch('/api/livro?genero=Romance');
-      const dados = await resposta.json();
+      const dados = await resposta.json(); // <- isso é um array direto
 
       track.innerHTML = "";
 
@@ -353,17 +635,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      dados.forEach(item => {
-
-        if (!livro.foto_url) return; // Pular livros sem capa
+      dados.forEach(livro => {
+        if (!livro.foto_url) return;
 
         const card = document.createElement("div");
         card.className = "prod-card";
         card.innerHTML = `
-          <img src="${livro.foto_url || './IMG/placeholder.png'}" alt="${livro.titulo}" class="capa-livro">
-          <p class="titulo">${livroInfo.title}</p>
-          <p class="preco">R$ ${(livro.preco || 0).toFixed(2)}</p>
-        `;
+        <img src="${livro.foto_url}" alt="${livro.titulo}" class="capa-livro">
+        <p class="titulo">${livro.titulo}</p>
+        <p class="preco">R$ ${(livro.preco || 0).toFixed(2)}</p>
+      `;
 
         aplicarCliqueLivro(card, livro);
         track.appendChild(card);
@@ -375,60 +656,49 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+
   carregarRomance();
 
   // =======================================================
   // FICÇÃO CIENTÍFICA
   // =======================================================
-  async function carregarFiccao() {
-    const track = document.querySelector(".ficcao-track");
-    if (!track) return;
+async function carregarFiccao() {
+  const track = document.querySelector(".ficcao-track");
+  if (!track) return;
 
-    try {
-      const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:Duna+OR+inauthor:Frank+Herbert+OR+intitle:Neuromancer&langRestrict=pt&maxResults=20`;
-      const resposta = await fetch(url);
-      const dados = await resposta.json();
+  try {
+    // Consulta: /api/livro?genero=Romance
+    const resposta = await fetch('/api/livro?genero=Ficção');
+    const dados = await resposta.json(); // <- isso é um array direto
 
-      track.innerHTML = "";
+    track.innerHTML = "";
 
-      if (!dados.items || dados.items.length === 0) {
-        track.innerHTML = "<p>Nenhum livro encontrado nesta categoria.</p>";
-        return;
-      }
-
-      dados.items.forEach(item => {
-        const info = item.volumeInfo;
-
-        if (!info.imageLinks?.thumbnail) return; // Pular livros sem capa
-
-        const livroInfo = {
-          title: info.title,
-          authors: info.authors || [],
-          publisher: info.publisher,
-          pageCount: info.pageCount,
-          description: info.description,
-          capa: info.imageLinks.thumbnail,
-          preco: `R$ ${(Math.random() * 40 + 10).toFixed(2)}`,
-          isbn: info.industryIdentifiers?.[0]?.identifier || "N/A"
-        };
-
-        const card = document.createElement("div");
-        card.className = "prod-card";
-        card.innerHTML = `
-          <img src="${livroInfo.capa}">
-          <p class="titulo">${livroInfo.title}</p>
-          <p class="preco">${livroInfo.preco}</p>
-        `;
-
-        aplicarCliqueLivro(card, livroInfo);
-        track.appendChild(card);
-      });
-
-      attachCarouselControls(document.querySelector(".ficcao-carousel"));
-    } catch (e) {
-      console.error("[ficcao] Erro ao carregar ficção científica:", e);
+    if (!dados || dados.length === 0) {
+      track.innerHTML = "<p>Nenhum livro encontrado nesta categoria.</p>";
+      return;
     }
+
+    dados.forEach(livro => {
+      if (!livro.foto_url) return;
+
+      const card = document.createElement("div");
+      card.className = "prod-card";
+      card.innerHTML = `
+        <img src="${livro.foto_url}" alt="${livro.titulo}" class="capa-livro">
+        <p class="titulo">${livro.titulo}</p>
+        <p class="preco">R$ ${(livro.preco || 0).toFixed(2)}</p>
+      `;
+
+      aplicarCliqueLivro(card, livro);
+      track.appendChild(card);
+    });
+
+    attachCarouselControls(document.querySelector(".ficcao-carousel"));
+  } catch (e) {
+    console.error("[romance] Erro ao carregar ficção cientifica:", e);
   }
+}
+
 
   carregarFiccao();
 
@@ -600,17 +870,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // =======================================================
   // CONTROLES DE CARROSSEL (melhor cálculo de step e limites)
   // =======================================================
+  // =======================================================
+  // CONTROLES DE CARROSSEL (melhor cálculo de step e limites)
+  // =======================================================
   function attachCarouselControls(containerEl) {
     if (!containerEl) return;
 
     const btnPrev = containerEl.querySelector(".esquerda");
     const btnNext = containerEl.querySelector(".direita");
-    // procurar qualquer track válida dentro do container
+    // Seleciona o primeiro elemento track válido dentro do container
     const track = containerEl.querySelector(".produtos-track, .mv-track, .recomendados-track, .romance-track, .ficcao-track, .aventura-track, .filosofia-track, .hqs-track");
 
     if (!track) return;
 
-    // garantir estado inicial
+    // 1. GARANTE O ESTADO INICIAL
     if (!track.dataset.position) {
       track.dataset.position = 0;
       track.style.transform = 'translateX(0px)';
@@ -618,29 +891,16 @@ document.addEventListener("DOMContentLoaded", () => {
     track.style.willChange = 'transform';
 
     function getViewport() {
-      // elemento que atua como viewport (tem overflow:hidden)
+      // Tenta encontrar o elemento que tem overflow:hidden ou volta ao pai
       const containerViewport = containerEl.querySelector('.produtos-track-container') || track.parentElement;
       return containerViewport;
     }
 
-    function computeGap(trackEl, sampleCard) {
-      const styles = getComputedStyle(trackEl);
-      const gap = parseFloat(styles.gap || styles.columnGap || 0);
-      if (gap) return Math.round(gap);
-      // fallback para margem direita do card
-      if (sampleCard) {
-        const cardStyles = getComputedStyle(sampleCard);
-        return Math.round(parseFloat(cardStyles.marginRight) || 0);
-      }
-      return 0;
-    }
-
+    // 2. CORREÇÃO PRINCIPAL: O passo é a largura da viewport, não a de um card.
     function step() {
-      const card = track.querySelector(".prod-card");
-      if (!card) return 250; // fallback
-      const cardW = Math.round(card.getBoundingClientRect().width);
-      const gap = computeGap(track, card) || 12;
-      return Math.round(cardW + gap);
+      const viewport = getViewport();
+      // O passo de movimento será a largura da área visível (Viewport)
+      return Math.round(viewport.getBoundingClientRect().width);
     }
 
     function updatePosition(delta) {
@@ -649,17 +909,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const viewport = getViewport();
       const viewportWidth = Math.round(viewport.getBoundingClientRect().width);
+
+      // scrollWidth é a largura total do conteúdo do track
       const maxScroll = Math.max(0, Math.round(track.scrollWidth) - viewportWidth);
 
-      // pos é negativo ao deslocar para a esquerda; limitar entre -maxScroll e 0
+      // Limita a posição entre o início (0) e o final (-maxScroll)
       pos = Math.max(-maxScroll, Math.min(0, pos));
 
       track.dataset.position = pos;
-      // arredondar para evitar sub-pixel artifacts
+      // Aplica a transformação
       track.style.transform = `translateX(${Math.round(pos)}px)`;
     }
 
-    // remover listeners duplicados (caso a função seja chamada múltiplas vezes)
+    // Remove listeners duplicados (boa prática)
     if (btnPrev) {
       btnPrev.replaceWith(btnPrev.cloneNode(true));
     }
@@ -671,29 +933,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const newNext = containerEl.querySelector(".direita");
 
     if (newPrev)
+      // Ao clicar para a esquerda (Prev), a posição (pos) deve aumentar (pos + step())
       newPrev.addEventListener("click", () => updatePosition(step()));
 
     if (newNext)
+      // Ao clicar para a direita (Next), a posição (pos) deve diminuir (pos - step())
       newNext.addEventListener("click", () => updatePosition(-step()));
 
-    // recalcular ao redimensionar para evitar cortes quando muda o tamanho da janela
+    // Touch/Swipe Support
+    let touchStartX = 0;
+    containerEl.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
+    containerEl.addEventListener('touchend', e => {
+      const diff = touchStartX - e.changedTouches[0].screenX;
+      if (Math.abs(diff) > 50) {
+        diff > 0 ? updatePosition(-step()) : updatePosition(step());
+      }
+    });
+
+    // Recalcular ao redimensionar
     window.addEventListener('resize', () => {
-      // reajustar posição para manter limites corretos
-      const pos = Math.round(parseFloat(track.dataset.position) || 0);
-      const viewport = getViewport();
-      const viewportWidth = Math.round(viewport.getBoundingClientRect().width);
-      const maxScroll = Math.max(0, Math.round(track.scrollWidth) - viewportWidth);
-      const newPos = Math.max(-maxScroll, Math.min(0, pos));
-      track.dataset.position = newPos;
-      track.style.transform = `translateX(${Math.round(newPos)}px)`;
+      // Simplesmente reajusta a posição para garantir que não passe do limite após redimensionamento.
+      updatePosition(0);
     });
   }
   // Initialize cart
   updateCartCount();
-  const closeCartBtn = document.getElementById('close-cart');
-  if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
+
   const checkoutBtn = document.querySelector('.btn-checkout');
-  if (checkoutBtn) checkoutBtn.addEventListener('click', () => alert('Compra finalizada!'));
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+      closeCart();
+      openCheckoutModal();
+    });
+  }
 
   // Add to cart for livro.html
   if (window.location.pathname.includes("livro.html")) {
@@ -714,21 +986,31 @@ document.addEventListener("DOMContentLoaded", () => {
 // =======================================================
 // PESQUISA (fora do DOMContentLoaded)
 // =======================================================
-const searchIcon = document.getElementById("searchIcon");
-const searchBox = document.getElementById("searchBox");
-const searchInput = searchBox?.querySelector("input");
+const searchToggle = document.getElementById("search-toggle");
+const searchContainer = document.getElementById("searchBox")?.parentElement;
+const searchInput = document.getElementById("searchBox")?.querySelector("input");
 
-if (searchIcon && searchBox && searchInput) {
-  searchIcon.addEventListener("click", () => {
-    searchBox.classList.toggle("active");
-    searchInput.focus();
+if (searchToggle && searchContainer && searchInput) {
+  searchToggle.addEventListener("click", () => {
+    searchContainer.classList.toggle("active");
+    if (searchContainer.classList.contains("active")) {
+      searchInput.focus();
+    }
   });
 
   searchInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       const query = searchInput.value.trim();
-      if (query !== "")
+      if (query !== "") {
         window.location.href = `./busca.html?query=${encodeURIComponent(query)}`;
+      }
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!searchContainer.contains(e.target) && !searchToggle.contains(e.target)) {
+      searchContainer.classList.remove("active");
     }
   });
 }
+
