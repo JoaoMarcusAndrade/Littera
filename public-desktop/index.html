@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/cart.css">
   <link rel="stylesheet" href="./css/checkout-modal.css">
+  <link rel="stylesheet" href="./css/reservas-modal.css">
+  <link rel="stylesheet" href="./css/compras-modal.css">
   <link rel="icon" type="image/x-icon" href="./img/icones/favicon.ico">
 
 </head>
@@ -23,28 +25,28 @@
     <div class="navbar-top">
 
       <a href="./index.html"><img src="./img/logo2.0.png" alt="Logo" class="logo"></a>
-      <span class="navbar-title">LITTERA</span>
+
+      <!-- Barra de Busca Centralizada -->
+      <div class="search-container">
+        <div class="search-box" id="searchBox">
+          <input type="text" placeholder=" Procure por livros, autores ou categorias..." />
+        </div>
+      </div>
 
       <div class="nav-icons">
-
-        <!-- Overlay da pesquisa -->
-        <div class="search-overlay" id="searchOverlay"></div>
-
-        <!-- Caixa de pesquisa na navbar -->
-        <div class="search-container">
-          <div class="lupa-icon" id="searchIcon">
-            <img src="./img/lupa2.0.png" alt="Buscar">
-          </div>
-          <div class="search-box" id="searchBox">
-            <input type="text" placeholder="Procure por livros…" />
-          </div>
+        <div class="lupa-icon" id="search-toggle">
+          <img src="./img/lupa2.0.png" alt="Buscar">
         </div>
-
-        <img src="./img/carrinho2.0.png" id="carrinho-icon" class="carrinho" onclick="openCart()">
+        
+        <div class="cart-container">
+          <img src="./img/carrinho2.0.png" id="carrinho-icon" class="carrinho" onclick="openCart()">
+          <span id="cart-count">0</span>
+        </div>
 
         <!-- LOGIN ICON + NOME DO USUÁRIO -->
         <div class="user-wrapper" onclick="openPopup()">
           <img class="user-icon" src="./img/login2.0.png" id="login-icon" alt="Login">
+          <div id="reservas-usuario"></div>
           <span id="user-name-display"></span>
         </div>
 
@@ -73,18 +75,14 @@
     </ul>
 
   </nav>
+  <div class="banner-carousel-container">
+    <div class="banner-track">
+       <img src="./img/banners/banner2.png" class="banner-item">
+       <img src="./img/banners/contato.png" class="banner-item">
+      <img src="./img/banners/contato.png" class="banner-item"> </div>
 
-  <div class="carousel">
-    <div class="carousel-track">
-      <img src="./img/banners/banner2.png" class="carousel-item">
-      <img src="./img/banner3.jpg" class="carousel-item">
-    </div>
-
-    <div class="carousel-indicators">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
+    <div class="banner-indicators"> <span class="banner-dot active"></span> <span class="banner-dot"></span> <span
+        class="banner-dot"></span> </div>
   </div>
 
 
@@ -194,7 +192,7 @@
   </footer>
 
   <!-- POPUP LOGIN / CADASTRO -->
-  <div id="popupOverlay" class="popup-overlay" aria-hidden="true">
+  <div id="popupOverlay" class="popup-overlay" style="display: none;">
     <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
       <span class="closePopup" id="closePopup">✕</span>
 
@@ -257,7 +255,7 @@
     <div class="checkout-overlay">
       <div class="checkout-content">
         <button class="checkout-close">×</button>
-        
+
         <div class="modal-progress">
           <div class="progress-step active" data-step="1">
             <span class="progress-number">1</span>
@@ -283,7 +281,7 @@
         <!-- STEP 1 -->
         <div class="step-content active" id="step-1">
           <h2>INFORMAÇÕES PESSOAIS</h2>
-          <form id="form-step-1" class="form-step">
+          <form id="form-informacoes" class="form-step">
             <div class="form-group">
               <label>Nome Completo</label>
               <input type="text" id="nome-completo" required>
@@ -338,7 +336,7 @@
         <!-- STEP 2 -->
         <div class="step-content" id="step-2">
           <h2>MÉTODO DE PAGAMENTO</h2>
-          <form id="form-step-2" class="form-step">
+          <form id="form-metodo" class="form-step">
             <div class="metodos-container">
               <label class="metodo-card active">
                 <input type="radio" name="metodo-pagamento" value="pix" checked>
@@ -349,11 +347,11 @@
                 <div>BOLETO</div>
               </label>
               <label class="metodo-card">
-                <input type="radio" name="metodo-pagamento" value="credito">
+                <input type="radio" name="metodo-pagamento" value="cartao-credito">
                 <div>CARTÃO CRÉDITO</div>
               </label>
               <label class="metodo-card">
-                <input type="radio" name="metodo-pagamento" value="debito">
+                <input type="radio" name="metodo-pagamento" value="cartao-debito">
                 <div>CARTÃO DÉBITO</div>
               </label>
             </div>
@@ -371,7 +369,7 @@
         <!-- STEP 3 -->
         <div class="step-content" id="step-3">
           <h2>CARTÃO DE CRÉDITO</h2>
-          <form id="form-step-3" class="form-step">
+          <form id="form-cartao" class="form-step">
             <div class="card-preview">
               <div id="card-preview-number">**** **** **** ****</div>
               <div id="card-preview-holder">NOME DO TITULAR</div>
@@ -435,10 +433,28 @@
     </div>
   </div>
 
+  <!-- MODAL DE MINHAS COMPRAS -->
+  <div id="compras-modal">
+    <div class="compras-overlay">
+      <div class="compras-content">
+        <div class="compras-header">
+          <h1>📦 Minhas Compras</h1>
+          <button class="compras-close" onclick="closeComprasModal()">&times;</button>
+        </div>
+        <div class="compras-body" id="compras-lista">
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPTS -->
   <script src="./js/script.js"></script>
   <script src="./js/auth.js"></script>
+  <script src="./js/reservas-modal.js"></script>
+  <script src="./js/compras-modal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="./js/checkout-modal.js"></script>
+  <script src="./js/checkout-integration.js"></script>
 
 </body>
 

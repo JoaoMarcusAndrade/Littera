@@ -1,0 +1,549 @@
+#checkout-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3000;
+}
+
+#checkout-modal.show {
+  display: flex !important;
+}
+
+.checkout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  backdrop-filter: blur(5px);
+  padding: 20px;
+}
+
+.checkout-content {
+  background: #f0ebe5;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 850px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.checkout-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: #8b3a3a;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.checkout-close:hover {
+  transform: scale(1.2);
+  color: #c27a5f;
+}
+
+/* PROGRESS BAR */
+.modal-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px 30px;
+  background: #fff;
+  border-bottom: 2px solid #8b3a3a;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.progress-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.progress-step.active .progress-number {
+  background: #8b3a3a;
+  color: white;
+  transform: scale(1.1);
+}
+
+.progress-step.completed .progress-number {
+  background: #5a8f3d;
+  color: white;
+}
+
+.progress-label {
+  font-size: 11px;
+  color: #999;
+  text-align: center;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.progress-step.active .progress-label {
+  color: #8b3a3a;
+  font-weight: 600;
+}
+
+.progress-line {
+  flex: 1;
+  height: 2px;
+  background: #e0e0e0;
+  margin: 0 8px;
+  position: relative;
+  top: -20px;
+}
+
+.progress-step.completed ~ .progress-line {
+  background: #5a8f3d;
+}
+
+/* STEP CONTENT */
+.step-content {
+  display: none;
+  padding: 30px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.step-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.step-content h2 {
+  color: #8b3a3a;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* FORM STYLES */
+.form-step {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  color: #8b3a3a;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 11px 14px;
+  border: 2px solid #c0a080;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+  color: #333;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #8b3a3a;
+  box-shadow: 0 0 0 3px rgba(139, 58, 58, 0.1);
+}
+
+.form-group input.error {
+  border-color: #d32f2f;
+  background: #fff5f5;
+}
+
+/* MÉTODOS DE PAGAMENTO */
+.metodos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.metodo-card {
+  position: relative;
+  cursor: pointer;
+}
+
+.metodo-card input[type="radio"] {
+  display: none;
+}
+
+.metodo-card > div {
+  padding: 18px;
+  border: 2px solid #c0a080;
+  border-radius: 8px;
+  background: white;
+  text-align: center;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.metodo-card:hover > div {
+  border-color: #8b3a3a;
+  background: #fafafa;
+}
+
+.metodo-card input:checked + div {
+  border-color: #8b3a3a;
+  background: #f5e8e0;
+  color: #8b3a3a;
+  box-shadow: 0 0 0 2px rgba(139, 58, 58, 0.1);
+}
+
+/* CARD PREVIEW */
+.card-preview {
+  background: linear-gradient(135deg, #8b3a3a 0%, #a54e4e 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 10px 30px rgba(139, 58, 58, 0.3);
+}
+
+.card-preview > div {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+#card-preview-number {
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-family: 'Courier New', monospace;
+}
+
+/* ENDEREÇO ENTREGA */
+.endereco-entrega {
+  padding: 15px;
+  background: #f5e8e0;
+  border-radius: 8px;
+  border-left: 4px solid #8b3a3a;
+  margin: 15px 0;
+}
+
+.endereco-entrega strong {
+  display: block;
+  color: #8b3a3a;
+  margin-bottom: 5px;
+}
+
+.endereco-entrega p {
+  color: #666;
+  font-size: 13px;
+  margin: 0;
+}
+
+/* CONFIRMAÇÃO */
+.confirmacao-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.confirmacao-item {
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.confirmacao-item h3 {
+  color: #8b3a3a;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.confirmacao-item p {
+  color: #666;
+  font-size: 13px;
+  margin: 0;
+}
+
+/* RESUMO PEDIDO */
+.resumo-pedido {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid #c0a080;
+}
+
+.resumo-pedido h3 {
+  color: #8b3a3a;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.resumo-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 13px;
+}
+
+.resumo-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.resumo-item-titulo {
+  color: #333;
+  font-weight: 600;
+}
+
+.resumo-item-qty {
+  color: #999;
+  font-size: 12px;
+}
+
+.resumo-item-valor {
+  color: #8b3a3a;
+  font-weight: 600;
+}
+
+.resumo-total {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #c0a080;
+}
+
+.resumo-total > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 13px;
+}
+
+.resumo-total > div:last-child {
+  font-size: 16px;
+  font-weight: bold;
+  color: #8b3a3a;
+  padding-top: 10px;
+}
+
+/* FORM ACTIONS */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+.btn-voltar,
+.btn-proximo,
+.btn-confirm {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-voltar {
+  background: #e0e0e0;
+  color: #666;
+}
+
+.btn-voltar:hover {
+  background: #c0c0c0;
+}
+
+.btn-proximo,
+.btn-confirm {
+  background: #8b3a3a;
+  color: white;
+}
+
+.btn-proximo:hover,
+.btn-confirm:hover {
+  background: #6d2e2e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 58, 58, 0.3);
+}
+
+/* SCROLLBAR */
+.checkout-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.checkout-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.checkout-content::-webkit-scrollbar-thumb {
+  background: #8b3a3a;
+  border-radius: 4px;
+}
+
+.checkout-content::-webkit-scrollbar-thumb:hover {
+  background: #6d2e2e;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .checkout-content {
+    width: 95%;
+    max-height: 90vh;
+    margin: 0 auto;
+  }
+
+  .step-content {
+    padding: 20px;
+  }
+
+  .modal-progress {
+    padding: 15px 20px;
+  }
+
+  .progress-label {
+    font-size: 10px;
+  }
+
+  .progress-number {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-voltar,
+  .btn-proximo,
+  .btn-confirm {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-overlay {
+    padding: 10px;
+  }
+  
+  .checkout-content {
+    width: 98%;
+    max-height: 92vh;
+  }
+  
+  .step-content {
+    padding: 15px;
+  }
+  
+  .modal-progress {
+    padding: 12px 15px;
+    gap: 5px;
+  }
+  
+  .progress-label {
+    font-size: 9px;
+  }
+  
+  .progress-number {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+  
+  .progress-line {
+    margin: 0 4px;
+  }
+  
+  .step-content h2 {
+    font-size: 16px;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .checkout-content {
+    width: 99%;
+  }
+  
+  .modal-progress {
+    padding: 10px;
+  }
+  
+  .progress-label {
+    font-size: 8px;
+  }
+}

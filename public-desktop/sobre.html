@@ -18,24 +18,27 @@
         <div class="top-line"></div>
         <div class="navbar-top">
             <a href="./index.html"><img src="./img/logo2.0.png" alt="Logo" class="logo"></a>
-            <span class="navbar-title">LITTERA</span>
-            <div class="nav-icons">
-                <!-- Overlay da pesquisa -->
-                <div class="search-overlay" id="searchOverlay"></div>
-
-                <!-- Caixa de pesquisa na navbar -->
-                <div class="search-container">
-                  <div class="lupa-icon" id="searchIcon">
-                    <img src="./img/lupa2.0.png" alt="Buscar">
-                  </div>
-                  <div class="search-box" id="searchBox">
-                    <input type="text" placeholder="Procure por livros…" />
-                  </div>
+            <!-- Barra de Busca Centralizada -->
+            <div class="search-container">
+                <div class="search-box" id="searchBox">
+                    <input type="text" placeholder=" Procure por livros, autores ou categorias..." />
                 </div>
-                <img src="./img/carrinho2.0.png" id="carrinho-icon" class="carrinho" onclick="openCart()">
+            </div>
+
+            <div class="nav-icons">
+                <div class="lupa-icon" id="search-toggle">
+                  <img src="./img/lupa2.0.png" alt="Buscar">
+                </div>
+                
+                <div class="cart-container">
+                  <img src="./img/carrinho2.0.png" id="carrinho-icon" class="carrinho" onclick="openCart()">
+                  <span id="cart-count">0</span>
+                </div>
                 <!-- LOGIN ICON + NOME DO USUÁRIO -->
                 <div class="user-wrapper" onclick="openPopup()">
                     <img class="user-icon" src="./img/login2.0.png" id="login-icon" alt="Login">
+                    <div id="reservas-usuario"></div>
+
                     <span id="user-name-display"></span>
                 </div>
                 <div class="menu-icon" id="menu-btn">&#9776;</div>
@@ -189,7 +192,7 @@
     </footer>
 
     <!-- POPUP LOGIN / CADASTRO -->
-    <div id="popupOverlay" class="popup-overlay" aria-hidden="true">
+    <div id="popupOverlay" class="popup-overlay" style="display: none;">
         <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
             <span class="closePopup" id="closePopup">✕</span>
 
@@ -251,7 +254,8 @@
     <script src="./js/script.js"></script>
     <script src="./js/auth.js"></script>
     <script src="./js/sobre.js"></script>
-    <script src="./js/checkout-modal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="./js/checkout-modal.js"></script>
 
     <!-- CHECKOUT MODAL -->
     <div id="checkout-modal" class="checkout-modal">
@@ -269,7 +273,7 @@
           </div>
           <div class="step-content active" id="step-1">
             <h2>INFORMAÇÕES PESSOAIS</h2>
-            <form id="form-step-1" class="form-step">
+            <form id="form-informacoes" class="form-step">
               <div class="form-group"><label>Nome Completo</label><input type="text" id="nome-completo" required></div>
               <div class="form-group"><label>CPF</label><input type="text" id="cpf" placeholder="000.000.000-00" required></div>
               <div class="form-group"><label>Data de Nascimento</label><input type="date" id="data-nascimento" required></div>
@@ -284,7 +288,7 @@
           </div>
           <div class="step-content" id="step-2">
             <h2>MÉTODO DE PAGAMENTO</h2>
-            <form id="form-step-2" class="form-step">
+            <form id="form-metodo" class="form-step">
               <div class="metodos-container">
                 <label class="metodo-card active"><input type="radio" name="metodo-pagamento" value="pix" checked><div>PIX</div></label>
                 <label class="metodo-card"><input type="radio" name="metodo-pagamento" value="boleto"><div>BOLETO</div></label>
@@ -297,7 +301,7 @@
           </div>
           <div class="step-content" id="step-3">
             <h2>CARTÃO DE CRÉDITO</h2>
-            <form id="form-step-3" class="form-step">
+            <form id="form-cartao" class="form-step">
               <div class="card-preview"><div id="card-preview-number">**** **** **** ****</div><div id="card-preview-holder">NOME DO TITULAR</div><div id="card-preview-expiry">MM/AA</div></div>
               <div class="form-group"><label>Nome do Titular</label><input type="text" id="nome-titular" required></div>
               <div class="form-group"><label>CPF</label><input type="text" id="cpf-cartao" required></div>

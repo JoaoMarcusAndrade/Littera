@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Littera</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/cart.css">
+  <link rel="stylesheet" href="./css/checkout-modal.css">
+  <link rel="icon" type="image/x-icon" href="./img/icones/favicon.ico">
+
+</head>
+
+<body>
+
+  <!-- NAV -->
+
+  <header>
+
+    <div class="top-line"></div>
+
+    <div class="navbar-top">
+
+      <a href="./index.html"><img src="./img/logo2.0.png" alt="Logo" class="logo"></a>
+
+      <div class="nav-icons">
+
+        <!-- Barra de Busca Centralizada -->
+        <div class="search-container">
+          <div class="search-box" id="searchBox">
+            <input type="text" placeholder=" Procure por livros, autores ou categorias..." />
+          </div>
+        </div>
+
+        <div class="lupa-icon" id="search-toggle">
+          <img src="./img/lupa2.0.png" alt="Buscar">
+        </div>
+
+        <div class="cart-container">
+          <img src="./img/carrinho2.0.png" id="carrinho-icon" class="carrinho" onclick="openCart()">
+          <span id="cart-count">0</span>
+        </div>
+
+        <!-- LOGIN ICON + NOME DO USUÁRIO -->
+        <div class="user-wrapper" onclick="openPopup()">
+          <img class="user-icon" src="./img/login2.0.png" id="login-icon" alt="Login">
+          <div id="reservas-usuario"></div>
+          <span id="user-name-display"></span>
+        </div>
+
+        <div class="menu-icon" id="menu-btn">&#9776;</div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MENU LATERAL -->
+  <div class="overlay" id="overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <a href="#" class="close-btn" id="close-btn">&times;</a>
+    <a href="#">Início</a>
+    <a href="./sobre.html">Sobre Nós</a>
+    <a href="./contato.html">Contato</a>
+  </aside>
+  
+<body>
+    
+
+    <div class="container">
+
+        <h1 class="titulo-pagina">Minhas Reservas</h1>
+
+        <div id="lista-reservas" class="lista-reservas">
+            <!-- JS vai inserir os livros aqui -->
+        </div>
+
+    </div>
+
+    <script src="./js/reserva.js"></script>
+</body>
+</html>

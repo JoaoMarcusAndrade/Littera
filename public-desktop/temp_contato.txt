@@ -473,19 +473,16 @@
 
         <div class="navbar-top">
             <a href="./index.html"><img src="./img/logo2.0.png" alt="Logo" class="logo"></a>
+            <span class="navbar-title">LITTERA</span>
 
             <!-- Barra de Busca Centralizada -->
             <div class="search-container">
                 <div class="search-box" id="searchBox">
-                    <input type="text" placeholder=" Procure por livros, autores ou categorias..." />
+                    <input type="text" placeholder="🔍 Procure por livros, autores ou categorias..." />
                 </div>
             </div>
 
             <div class="nav-icons">
-                <div class="lupa-icon" id="search-toggle">
-                  <img src="./img/lupa2.0.png" alt="Buscar">
-                </div>
-                
                 <div class="cart-container">
                   <img src="./img/carrinho2.0.png" id="carrinho-icon" class="carrinho" onclick="openCart()">
                   <span id="cart-count">0</span>
@@ -655,7 +652,6 @@
     </div>
 
     <script src="./js/script.js"></script>
-    <script src="./js/auth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
   <script src="./js/checkout-modal.js"></script>
 </body>

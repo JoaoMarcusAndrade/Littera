@@ -518,4 +518,4 @@ margin-top: 10%;  align-self: flex-start;
 .hidden { display: none !important; }
 .text-muted { color: #777; font-size: 13px; }
 
-/* Fim do arquivo */
+/* Fim do arquivo */.card-actions { display: flex; justify-content: center; margin-top: 12px; gap: 8px; } .btn-reservar { background: #5a8f3d; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; } .btn-reservar:hover { background: #4a7a2d; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(90, 143, 61, 0.3); } 
