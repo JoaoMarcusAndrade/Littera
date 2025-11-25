@@ -343,41 +343,29 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!track) return;
 
     try {
-      const resposta = await fetch('/api/livro?romance=Romance');
+      const resposta = await fetch('/api/livro?genero=Romance');
       const dados = await resposta.json();
 
       track.innerHTML = "";
 
-      if (!dados.items || dados.items.length === 0) {
+      if (!dados || dados.length === 0) {
         track.innerHTML = "<p>Nenhum livro encontrado nesta categoria.</p>";
         return;
       }
 
-      dados.items.forEach(item => {
-        const info = item.volumeInfo;
+      dados.forEach(item => {
 
-        if (!info.imageLinks?.thumbnail) return; // Pular livros sem capa
-
-        const livroInfo = {
-          title: info.titulo,
-          authors: info.autor || [],
-          editora: info.editora,
-          paginas: info.pageCount,
-          descricao: info.descricao,
-          capa: info.imageLinks.thumbnail,
-          preco: `R$ ${(Math.random() * 40 + 10).toFixed(2)}`,
-          isbn: info.industryIdentifiers?.[0]?.identifier || "N/A"
-        };
+        if (!livro.foto_url) return; // Pular livros sem capa
 
         const card = document.createElement("div");
         card.className = "prod-card";
         card.innerHTML = `
-          <img src="${livroInfo.capa}">
+          <img src="${livro.foto_url || './IMG/placeholder.png'}" alt="${livro.titulo}" class="capa-livro">
           <p class="titulo">${livroInfo.title}</p>
-          <p class="preco">${livroInfo.preco}</p>
+          <p class="preco">R$ ${(livro.preco || 0).toFixed(2)}</p>
         `;
 
-        aplicarCliqueLivro(card, livroInfo);
+        aplicarCliqueLivro(card, livro);
         track.appendChild(card);
       });
 
