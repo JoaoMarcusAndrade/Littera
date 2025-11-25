@@ -343,8 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!track) return;
 
     try {
-      const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:Orgulho+e+Preconceito+OR+inauthor:Jane+Austen+OR+intitle:Romeu+e+Julieta&langRestrict=pt&maxResults=20`;
-      const resposta = await fetch(url);
+      const resposta = await fetch('/api/livro?romance=Romance');
       const dados = await resposta.json();
 
       track.innerHTML = "";
@@ -360,11 +359,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!info.imageLinks?.thumbnail) return; // Pular livros sem capa
 
         const livroInfo = {
-          title: info.title,
-          authors: info.authors || [],
-          publisher: info.publisher,
-          pageCount: info.pageCount,
-          description: info.description,
+          title: info.titulo,
+          authors: info.autor || [],
+          editora: info.editora,
+          paginas: info.pageCount,
+          descricao: info.descricao,
           capa: info.imageLinks.thumbnail,
           preco: `R$ ${(Math.random() * 40 + 10).toFixed(2)}`,
           isbn: info.industryIdentifiers?.[0]?.identifier || "N/A"

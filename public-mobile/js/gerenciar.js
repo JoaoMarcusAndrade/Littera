@@ -106,7 +106,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       preview.src = livro.foto_url || "./IMG/placeholder.png"
 
-      
       modal.classList.add("active");
       document.body.style.overflow = "hidden";
     }

@@ -69,18 +69,20 @@ router.post('/api/livro', async (req, res) => {
 router.get('/api/livro', async (req, res) => { // puxar livros
   try{
 
-    const { q } = req.query; //texto de pesquisa opcional
+    const { genero, titulo, ISBN, autor } = req.query; //texto de pesquisa opcional
 
     const where = {};
 
-    if (q) {
-      where.titulo = { [Op.iLike]: `%${q}%`};
-    }
+    if (genero) where.genero = { [Op.iLike]: `%${genero}%`};
+    if (titulo) where.titulo = { [Op.iLike]: `%${titulo}%`};
+    if (ISBN) where.ISBN = { [Op.iLike]: `%${ISBN}%`};
+    if (autor) where.autor = { [Op.iLike]: `%${autor}%`};
 
     const livros = await Livro.findAll({
       where,
       order: [['createdAt', 'DESC']]//pega todos os livros do mais rescente ao mais antigo
     });
+    
     res.json(livros);
   } catch (err){
     console.error(err);
