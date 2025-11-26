@@ -80,57 +80,57 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ============================================================
-// 🔥 BUSCAR LIVROS SIMILARES PELO BANCO
-// ============================================================
-async function carregarLivrosSimilares(livroAtual) {
-  const container = document.getElementById('livros-similares');
-  if (!container) return;
+// // ============================================================
+// // 🔥 BUSCAR LIVROS SIMILARES PELO BANCO
+// // ============================================================
+// async function carregarLivrosSimilares(livroAtual) {
+//   const container = document.getElementById('livros-similares');
+//   if (!container) return;
 
-  try {
-    const genero = livroAtual.genero || livroAtual.categoria || livroAtual.categories?.[0];
-    if (!genero) {
-      container.innerHTML = '<p style="text-align:center;color:#999;">Sem categoria para buscar similares</p>';
-      return;
-    }
+//   // try {
+//   //   const genero = livroAtual.genero || livroAtual.categoria || livroAtual.categories?.[0];
+//   //   if (!genero) {
+//   //     container.innerHTML = '<p style="text-align:center;color:#999;">Sem categoria para buscar similares</p>';
+//   //     return;
+//   //   }
 
-    const url = `/api/livro?g=${encodeURIComponent(genero)}`;
+//   //   const url = `/api/livro?g=${encodeURIComponent(genero)}`;
     
-    const resp = await fetch(url);
-    const data = await resp.json();
+//   //   const resp = await fetch(url);
+//   //   const data = await resp.json();
 
-    if (!data.items || data.items.length === 0) {
-      container.innerHTML = '<p style="text-align:center;color:#999;">Nenhum livro similar encontrado</p>';
-      return;
-    }
+//   //   if (!data.items || data.items.length === 0) {
+//   //     container.innerHTML = '<p style="text-align:center;color:#999;">Nenhum livro similar encontrado</p>';
+//   //     return;
+//   //   }
 
-    container.innerHTML = '';
+//   //   container.innerHTML = '';
 
-    data.items.forEach(item => {
-      if (item.id === livroAtual.id) return; // evita recomendar o mesmo livro
+//   //   data.items.forEach(item => {
+//   //     if (item.id === livroAtual.id) return; // evita recomendar o mesmo livro
 
-      const card = document.createElement('div');
-      card.className = 'prod-card';
-      card.style.cursor = 'pointer';
+//   //     const card = document.createElement('div');
+//   //     card.className = 'prod-card';
+//   //     card.style.cursor = 'pointer';
 
-      const preco = `R$ ${Number(item.preco || 0).toFixed(2)}`;
+//   //     const preco = `R$ ${Number(item.preco || 0).toFixed(2)}`;
 
-      card.innerHTML = `
-        <img src="${item.foto_url || './IMG/placeholder.png'}" alt="${item.titulo}">
-        <p class="titulo">${item.titulo}</p>
-        <p class="preco">${preco}</p>
-      `;
+//   //     card.innerHTML = `
+//   //       <img src="${item.foto_url || './IMG/placeholder.png'}" alt="${item.titulo}">
+//   //       <p class="titulo">${item.titulo}</p>
+//   //       <p class="preco">${preco}</p>
+//   //     `;
 
-      card.addEventListener('click', () => {
-        localStorage.setItem('livroSelecionado', JSON.stringify(item));
-        window.location.reload();
-      });
+//   //     card.addEventListener('click', () => {
+//   //       localStorage.setItem('livroSelecionado', JSON.stringify(item));
+//   //       window.location.reload();
+//   //     });
 
-      container.appendChild(card);
-    });
+//   //     container.appendChild(card);
+//   //   });
 
-  } catch (err) {
-    console.error('Erro ao carregar similares:', err);
-    container.innerHTML = '<p style="text-align:center;color:#999;">Erro ao carregar recomendações</p>';
-  }
-}
+//   // } catch (err) {
+//   //   console.error('Erro ao carregar similares:', err);
+//   //   container.innerHTML = '<p style="text-align:center;color:#999;">Erro ao carregar recomendações</p>';
+//   // }
+// }

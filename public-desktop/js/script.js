@@ -454,62 +454,50 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!container) return;
 
     try {
-      const q = encodeURIComponent(`inauthor:${autorOuTitulo}`);
-      const url = `https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=8`;
-      const resposta = await fetch(url);
-      const dados = await resposta.json();
-
-      if (!dados.items || dados.items.length === 0) {
-        container.innerHTML = "<p>Nenhum livro semelhante encontrado.</p>";
+      const genero = livroAtual.genero || livroAtual.categoria || livroAtual.categories?.[0];
+      if (!genero) {
+        container.innerHTML = '<p style="text-align:center;color:#999;">Sem categoria para buscar similares</p>';
         return;
       }
 
-      container.innerHTML = `
-        <div class="produtos-carousel recomendados-carousel">
-          <button class="prod-seta esquerda">&#8249;</button>
-          <div class="produtos-track recomendados-track"></div>
-          <button class="prod-seta direita">&#8250;</button>
-        </div>
+      const url = `/api/livro?g=${encodeURIComponent(genero)}`;
+
+      const resp = await fetch(url);
+      const data = await resp.json();
+
+      if (!data.items || data.items.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:#999;">Nenhum livro similar encontrado</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+
+      data.items.forEach(item => {
+        if (item.id === livroAtual.id) return; // evita recomendar o mesmo livro
+
+        const card = document.createElement('div');
+        card.className = 'prod-card';
+        card.style.cursor = 'pointer';
+
+        const preco = `R$ ${Number(item.preco || 0).toFixed(2)}`;
+
+        card.innerHTML = `
+        <img src="${item.foto_url || './IMG/placeholder.png'}" alt="${item.titulo}">
+        <p class="titulo">${item.titulo}</p>
+        <p class="preco">${preco}</p>
       `;
 
-      const track = container.querySelector(".recomendados-track");
+        card.addEventListener('click', () => {
+          localStorage.setItem('livroSelecionado', JSON.stringify(item));
+          window.location.reload();
+        });
 
-      if (!dados.items || dados.items.length === 0) {
-        track.innerHTML = "<p>Nenhum livro encontrado nesta categoria.</p>";
-        return;
-      }
-
-      dados.items.forEach(item => {
-        const info = item.volumeInfo;
-
-        if (!info.imageLinks?.thumbnail) return; // Pular livros sem capa
-
-        const livroInfo = {
-          title: info.title,
-          authors: info.authors || [],
-          publisher: info.publisher,
-          pageCount: info.pageCount,
-          description: info.description,
-          capa: info.imageLinks.thumbnail,
-          preco: `R$ ${(Math.random() * 40 + 10).toFixed(2)}`,
-          isbn: info.industryIdentifiers?.[0]?.identifier || "N/A"
-        };
-
-        const card = document.createElement("div");
-        card.className = "prod-card";
-        card.innerHTML = `
-          <img src="${livroInfo.capa}">
-          <p class="titulo">${livroInfo.title}</p>
-          <p class="preco">${livroInfo.preco}</p>
-        `;
-
-        aplicarCliqueLivro(card, livroInfo);
-        track.appendChild(card);
+        container.appendChild(card);
       });
 
-      attachCarouselControls(container.querySelector(".recomendados-carousel"));
-    } catch (erro) {
-      console.error("[carregarSemelhantes] Erro:", erro);
+    } catch (err) {
+      console.error('Erro ao carregar similares:', err);
+      container.innerHTML = '<p style="text-align:center;color:#999;">Erro ao carregar recomendações</p>';
     }
   }
 
@@ -760,7 +748,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function carregarFilosofia() {
     const track = document.querySelector(".filosofia-track");
     if (!track) return;
-        try {
+    try {
       // Consulta: /api/livro?genero=Romance
       const resposta = await fetch('/api/livro?genero=Filosofia');
       const dados = await resposta.json(); // <- isso é um array direto
