@@ -578,8 +578,7 @@ async function carregarSemelhantes(livroAtual) {
   async function carregarFiccao() {
     const track = document.querySelector(".ficcao-track");
     if (!track) return;
-
-    try {
+        try {
       // Consulta: /api/livro?genero=Romance
       const resposta = await fetch('/api/livro?genero=Ficção');
       const dados = await resposta.json(); // <- isso é um array direto
@@ -611,12 +610,12 @@ async function carregarSemelhantes(livroAtual) {
 
       attachCarouselControls(document.querySelector(".ficcao-carousel"));
     } catch (e) {
-      console.error("[romance] Erro ao carregar ficção cientifica:", e);
+      console.error("[ficção] Erro ao carregar ficção:", e);
     }
+
   }
 
-
-  carregarFiccao();
+carregarFiccao();
 
   // =======================================================
   // AVENTURA E MISTÉRIO

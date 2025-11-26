@@ -10,7 +10,7 @@ app.use(cors({
   origin: ['http://localhost:3000'],
   credentials: true
 }));
-
+0
 app.use(cookieParser());
 
 app.use(express.json({ limit: "10mb" }));
