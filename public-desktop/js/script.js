@@ -640,7 +640,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const card = document.createElement("div");
 
-        
+
         const preco = parseFloat(String(livro.preco).replace(",", "."));
 
         card.className = "prod-card";
@@ -666,45 +666,45 @@ document.addEventListener("DOMContentLoaded", () => {
   // =======================================================
   // FICÇÃO CIENTÍFICA
   // =======================================================
-async function carregarFiccao() {
-  const track = document.querySelector(".ficcao-track");
-  if (!track) return;
+  async function carregarFiccao() {
+    const track = document.querySelector(".ficcao-track");
+    if (!track) return;
 
-  try {
-    // Consulta: /api/livro?genero=Romance
-    const resposta = await fetch('/api/livro?genero=Ficção');
-    const dados = await resposta.json(); // <- isso é um array direto
+    try {
+      // Consulta: /api/livro?genero=Romance
+      const resposta = await fetch('/api/livro?genero=Ficção');
+      const dados = await resposta.json(); // <- isso é um array direto
 
-    track.innerHTML = "";
+      track.innerHTML = "";
 
-    if (!dados || dados.length === 0) {
-      track.innerHTML = "<p>Nenhum livro encontrado nesta categoria.</p>";
-      return;
-    }
+      if (!dados || dados.length === 0) {
+        track.innerHTML = "<p>Nenhum livro encontrado nesta categoria.</p>";
+        return;
+      }
 
-    dados.forEach(livro => {
-      if (!livro.foto_url) return;
+      dados.forEach(livro => {
+        if (!livro.foto_url) return;
 
-      const card = document.createElement("div");
+        const card = document.createElement("div");
 
-      const preco = parseFloat(String(livro.preco).replace(",", "."));
+        const preco = parseFloat(String(livro.preco).replace(",", "."));
 
-      card.className = "prod-card";
-      card.innerHTML = `
+        card.className = "prod-card";
+        card.innerHTML = `
         <img src="${livro.foto_url}" alt="${livro.titulo}" class="capa-livro">
         <p class="titulo">${livro.titulo}</p>
         <p class="preco">R$ ${(!isNaN(preco) ? preco : 0).toFixed(2)}</p>
       `;
 
-      aplicarCliqueLivro(card, livro);
-      track.appendChild(card);
-    });
+        aplicarCliqueLivro(card, livro);
+        track.appendChild(card);
+      });
 
-    attachCarouselControls(document.querySelector(".ficcao-carousel"));
-  } catch (e) {
-    console.error("[romance] Erro ao carregar ficção cientifica:", e);
+      attachCarouselControls(document.querySelector(".ficcao-carousel"));
+    } catch (e) {
+      console.error("[romance] Erro ao carregar ficção cientifica:", e);
+    }
   }
-}
 
 
   carregarFiccao();
@@ -717,48 +717,38 @@ async function carregarFiccao() {
     if (!track) return;
 
     try {
-      const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:Sherlock+Holmes+OR+inauthor:Arthur+Conan+Doyle+OR+intitle:O+Cão+dos+Baskerville&langRestrict=pt&maxResults=20`;
-      const resposta = await fetch(url);
-      const dados = await resposta.json();
+      // Consulta: /api/livro?genero=Romance
+      const resposta = await fetch('/api/livro?genero=Aventura');
+      const dados = await resposta.json(); // <- isso é um array direto
 
       track.innerHTML = "";
 
-      if (!dados.items || dados.items.length === 0) {
+      if (!dados || dados.length === 0) {
         track.innerHTML = "<p>Nenhum livro encontrado nesta categoria.</p>";
         return;
       }
 
-      dados.items.forEach(item => {
-        const info = item.volumeInfo;
-
-        if (!info.imageLinks?.thumbnail) return; // Pular livros sem capa
-
-        const livroInfo = {
-          title: info.title,
-          authors: info.authors || [],
-          publisher: info.publisher,
-          pageCount: info.pageCount,
-          description: info.description,
-          capa: info.imageLinks.thumbnail,
-          preco: `R$ ${(Math.random() * 40 + 10).toFixed(2)}`,
-          isbn: info.industryIdentifiers?.[0]?.identifier || "N/A"
-        };
+      dados.forEach(livro => {
+        if (!livro.foto_url) return;
 
         const card = document.createElement("div");
+
+        const preco = parseFloat(String(livro.preco).replace(",", "."));
+
         card.className = "prod-card";
         card.innerHTML = `
-          <img src="${livroInfo.capa}">
-          <p class="titulo">${livroInfo.title}</p>
-          <p class="preco">${livroInfo.preco}</p>
-        `;
+        <img src="${livro.foto_url}" alt="${livro.titulo}" class="capa-livro">
+        <p class="titulo">${livro.titulo}</p>
+        <p class="preco">R$ ${(!isNaN(preco) ? preco : 0).toFixed(2)}</p>
+      `;
 
-        aplicarCliqueLivro(card, livroInfo);
+        aplicarCliqueLivro(card, livro);
         track.appendChild(card);
       });
 
-      attachCarouselControls(document.querySelector(".aventura-carousel"));
+      attachCarouselControls(document.querySelector(".ficcao-carousel"));
     } catch (e) {
-      console.error("[aventura] Erro ao carregar aventura e mistério:", e);
+      console.error("[romance] Erro ao carregar ficção cientifica:", e);
     }
   }
 
@@ -770,51 +760,41 @@ async function carregarFiccao() {
   async function carregarFilosofia() {
     const track = document.querySelector(".filosofia-track");
     if (!track) return;
-
-    try {
-      const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:Assim+Falou+Zaratustra+OR+inauthor:Friedrich+Nietzsche+OR+intitle:Crítica+da+Razão+Pura&langRestrict=pt&maxResults=20`;
-      const resposta = await fetch(url);
-      const dados = await resposta.json();
+        try {
+      // Consulta: /api/livro?genero=Romance
+      const resposta = await fetch('/api/livro?genero=Filosofia');
+      const dados = await resposta.json(); // <- isso é um array direto
 
       track.innerHTML = "";
 
-      if (!dados.items || dados.items.length === 0) {
+      if (!dados || dados.length === 0) {
         track.innerHTML = "<p>Nenhum livro encontrado nesta categoria.</p>";
         return;
       }
 
-      dados.items.forEach(item => {
-        const info = item.volumeInfo;
-
-        if (!info.imageLinks?.thumbnail) return; // Pular livros sem capa
-
-        const livroInfo = {
-          title: info.title,
-          authors: info.authors || [],
-          publisher: info.publisher,
-          pageCount: info.pageCount,
-          description: info.description,
-          capa: info.imageLinks.thumbnail,
-          preco: `R$ ${(Math.random() * 40 + 10).toFixed(2)}`,
-          isbn: info.industryIdentifiers?.[0]?.identifier || "N/A"
-        };
+      dados.forEach(livro => {
+        if (!livro.foto_url) return;
 
         const card = document.createElement("div");
+
+        const preco = parseFloat(String(livro.preco).replace(",", "."));
+
         card.className = "prod-card";
         card.innerHTML = `
-          <img src="${livroInfo.capa}">
-          <p class="titulo">${livroInfo.title}</p>
-          <p class="preco">${livroInfo.preco}</p>
-        `;
+        <img src="${livro.foto_url}" alt="${livro.titulo}" class="capa-livro">
+        <p class="titulo">${livro.titulo}</p>
+        <p class="preco">R$ ${(!isNaN(preco) ? preco : 0).toFixed(2)}</p>
+      `;
 
-        aplicarCliqueLivro(card, livroInfo);
+        aplicarCliqueLivro(card, livro);
         track.appendChild(card);
       });
 
       attachCarouselControls(document.querySelector(".filosofia-carousel"));
     } catch (e) {
-      console.error("[filosofia] Erro ao carregar filosofia:", e);
+      console.error("[romance] Erro ao carregar filosofia:", e);
     }
+
   }
 
   carregarFilosofia();
@@ -825,58 +805,45 @@ async function carregarFiccao() {
   async function carregarHQs() {
     const track = document.querySelector(".hqs-track");
     if (!track) return;
-
     try {
-      const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:Watchmen+OR+inauthor:Alan+Moore+OR+intitle:Turma+da+Mônica&langRestrict=pt&maxResults=20`;
-      const resposta = await fetch(url);
-      const dados = await resposta.json();
+      // Consulta: /api/livro?genero=Romance
+      const resposta = await fetch('/api/livro?genero=HQ');
+      const dados = await resposta.json(); // <- isso é um array direto
 
       track.innerHTML = "";
 
-      if (!dados.items || dados.items.length === 0) {
+      if (!dados || dados.length === 0) {
         track.innerHTML = "<p>Nenhum livro encontrado nesta categoria.</p>";
         return;
       }
 
-      dados.items.forEach(item => {
-        const info = item.volumeInfo;
-
-        if (!info.imageLinks?.thumbnail) return; // Pular livros sem capa
-
-        const livroInfo = {
-          title: info.title,
-          authors: info.authors || [],
-          publisher: info.publisher,
-          pageCount: info.pageCount,
-          description: info.description,
-          capa: info.imageLinks.thumbnail,
-          preco: `R$ ${(Math.random() * 40 + 10).toFixed(2)}`,
-          isbn: info.industryIdentifiers?.[0]?.identifier || "N/A"
-        };
+      dados.forEach(livro => {
+        if (!livro.foto_url) return;
 
         const card = document.createElement("div");
+
+        const preco = parseFloat(String(livro.preco).replace(",", "."));
+
         card.className = "prod-card";
         card.innerHTML = `
-          <img src="${livroInfo.capa}">
-          <p class="titulo">${livroInfo.title}</p>
-          <p class="preco">${livroInfo.preco}</p>
-        `;
+        <img src="${livro.foto_url}" alt="${livro.titulo}" class="capa-livro">
+        <p class="titulo">${livro.titulo}</p>
+        <p class="preco">R$ ${(!isNaN(preco) ? preco : 0).toFixed(2)}</p>
+      `;
 
-        aplicarCliqueLivro(card, livroInfo);
+        aplicarCliqueLivro(card, livro);
         track.appendChild(card);
       });
 
       attachCarouselControls(document.querySelector(".hqs-carousel"));
     } catch (e) {
-      console.error("[hqs] Erro ao carregar HQs:", e);
+      console.error("[romance] Erro ao carregar HQs:", e);
     }
+
   }
 
   carregarHQs();
 
-  // =======================================================
-  // CONTROLES DE CARROSSEL (melhor cálculo de step e limites)
-  // =======================================================
   // =======================================================
   // CONTROLES DE CARROSSEL (melhor cálculo de step e limites)
   // =======================================================
