@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //   //     return;
 //   //   }
 
-//   //   const url = `/api/livro?g=${encodeURIComponent(genero)}`;
+//   //   const url = `/api/livro?genero=${encodeURIComponent(genero)}`;
     
 //   //   const resp = await fetch(url);
 //   //   const data = await resp.json();

@@ -449,57 +449,64 @@ document.addEventListener("DOMContentLoaded", () => {
   // =======================================================
   // RECOMENDADOS (CARROSSEL)
   // =======================================================
-  async function carregarSemelhantes(autorOuTitulo) {
-    const container = qs("livros-similares");
-    if (!container) return;
+async function carregarSemelhantes(livroAtual) {
+  const container = document.getElementById("livros-similares");
+  if (!container) return;
 
-    try {
-      const genero = livroAtual.genero || livroAtual.categoria || livroAtual.categories?.[0];
-      if (!genero) {
-        container.innerHTML = '<p style="text-align:center;color:#999;">Sem categoria para buscar similares</p>';
-        return;
-      }
+  try {
+    const genero = livroAtual.genero || livroAtual.categoria || livroAtual.categories?.[0];
 
-      const url = `/api/livro?genero=${encodeURIComponent(genero)}`;
+    if (!genero) {
+      container.innerHTML = '<p style="text-align:center;color:#999;">Sem categoria para buscar similares</p>';
+      return;
+    }
 
-      const resp = await fetch(url);
-      const data = await resp.json();
+    const url = `/api/livro?genero=${encodeURIComponent(genero)}`;
+    const resposta = await fetch(url);
+    const dados = await resposta.json();
 
-      if (!data.items || data.items.length === 0) {
-        container.innerHTML = '<p style="text-align:center;color:#999;">Nenhum livro similar encontrado</p>';
-        return;
-      }
+    if (!dados.items || dados.items.length === 0) {
+      container.innerHTML = '<p style="text-align:center;color:#999;">Nenhum livro similar encontrado</p>';
+      return;
+    }
 
-      container.innerHTML = '';
+    // --- Monta o layout ---
+    container.innerHTML = `
+      <div class="produtos-carousel recomendados-carousel">
+        <button class="prod-seta esquerda">&#8249;</button>
+        <div class="produtos-track recomendados-track"></div>
+        <button class="prod-seta direita">&#8250;</button>
+      </div>
+    `;
 
-      data.items.forEach(item => {
-        if (item.id === livroAtual.id) return; // evita recomendar o mesmo livro
+    const track = container.querySelector(".recomendados-track");
 
-        const card = document.createElement('div');
-        card.className = 'prod-card';
-        card.style.cursor = 'pointer';
+    dados.items.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "prod-card";
 
-        const preco = `R$ ${Number(item.preco || 0).toFixed(2)}`;
-
-        card.innerHTML = `
+      card.innerHTML = `
         <img src="${item.foto_url || './IMG/placeholder.png'}" alt="${item.titulo}">
         <p class="titulo">${item.titulo}</p>
-        <p class="preco">${preco}</p>
+        <p class="preco">R$ ${Number(item.preco).toFixed(2)}</p>
       `;
 
-        card.addEventListener('click', () => {
-          localStorage.setItem('livroSelecionado', JSON.stringify(item));
-          window.location.reload();
-        });
-
-        container.appendChild(card);
+      // clique → salvar e abrir página
+      card.addEventListener("click", () => {
+        localStorage.setItem("livroSelecionado", JSON.stringify(item));
+        window.location.href = "./livro.html";
       });
 
-    } catch (err) {
-      console.error('Erro ao carregar similares:', err);
-      container.innerHTML = '<p style="text-align:center;color:#999;">Erro ao carregar recomendações</p>';
-    }
+      track.appendChild(card);
+    });
+
+    attachCarouselControls(container.querySelector(".recomendados-carousel"));
+
+  } catch (erro) {
+    console.error("[carregarSemelhantes] Erro:", erro);
+    container.innerHTML = '<p style="text-align:center;color:#999;">Erro ao carregar recomendações</p>';
   }
+}
 
   // =======================================================
   // PRODUTOS (CARROSSEL PRINCIPAL)
@@ -748,7 +755,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function carregarFilosofia() {
     const track = document.querySelector(".filosofia-track");
     if (!track) return;
-    try {
+        try {
       // Consulta: /api/livro?genero=Romance
       const resposta = await fetch('/api/livro?genero=Filosofia');
       const dados = await resposta.json(); // <- isso é um array direto
