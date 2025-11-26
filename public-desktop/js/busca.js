@@ -17,8 +17,11 @@ if (!query) {
 async function buscarLivros() {
   try {
     resultados.innerHTML = "<p>Carregando...</p>";
-    const url = `/api/livro?q=${encodeURIComponent(query)}&langRestrict=pt&maxResults=20`;
-    const resp = await fetch(url);
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("query");
+
+    const resp = await fetch(`/api/livro?q=${encodeURIComponent(q)}`);
+
 
     if (!resp.ok) throw new Error("Erro ao consultar a API");
 

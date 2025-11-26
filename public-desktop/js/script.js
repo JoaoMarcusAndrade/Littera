@@ -987,4 +987,3 @@ if (searchToggle && searchContainer && searchInput) {
     }
   });
 }
-
