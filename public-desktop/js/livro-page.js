@@ -88,42 +88,41 @@ async function carregarLivrosSimilares(livroAtual) {
   if (!container) return;
 
   try {
-    const genero = livroAtual.genero || livroAtual.genre || livroAtual.categoria || livroAtual.categories?.[0];
-
+    const genero = livroAtual.genero || livroAtual.categoria || livroAtual.categories?.[0];
     if (!genero) {
-      container.innerHTML = '<p style="text-align:center;color:#999;">Nenhum gênero disponível para recomendações</p>';
+      container.innerHTML = '<p style="text-align:center;color:#999;">Sem categoria para buscar similares</p>';
       return;
     }
 
-    const resp = await fetch(`/api/livro?genero=${encodeURIComponent(genero)}`);
-    const dados = await resp.json();
+    const url = `/api/livro?g=${encodeURIComponent(genero)}`;
+    
+    const resp = await fetch(url);
+    const data = await resp.json();
 
-    if (!dados.items || dados.items.length === 0) {
+    if (!data.items || data.items.length === 0) {
       container.innerHTML = '<p style="text-align:center;color:#999;">Nenhum livro similar encontrado</p>';
       return;
     }
 
     container.innerHTML = '';
 
-    dados.items.forEach((livro) => {
-      const capa = livro.foto_url || livro.capa || livro.imagem || 'IMG/placeholder.png';
+    data.items.forEach(item => {
+      if (item.id === livroAtual.id) return; // evita recomendar o mesmo livro
 
       const card = document.createElement('div');
       card.className = 'prod-card';
       card.style.cursor = 'pointer';
 
-      const preco = livro.preco
-        ? `R$ ${Number(livro.preco).toFixed(2)}`
-        : `R$ ${(Math.random() * 40 + 10).toFixed(2)}`;
+      const preco = `R$ ${Number(item.preco || 0).toFixed(2)}`;
 
       card.innerHTML = `
-        <img src="${capa}" alt="${livro.titulo}">
-        <p class="titulo">${livro.titulo}</p>
+        <img src="${item.foto_url || './IMG/placeholder.png'}" alt="${item.titulo}">
+        <p class="titulo">${item.titulo}</p>
         <p class="preco">${preco}</p>
       `;
 
       card.addEventListener('click', () => {
-        localStorage.setItem('livroSelecionado', JSON.stringify(livro));
+        localStorage.setItem('livroSelecionado', JSON.stringify(item));
         window.location.reload();
       });
 
