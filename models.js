@@ -19,7 +19,7 @@ const Livro = sequelize.define("LIVRO", {
   ISBN: { type: DataTypes.CHAR(13) },
   genero: { type: DataTypes.STRING(40) },
   estado_conservacao: { type: DataTypes.STRING(255) },
-  descricao: { type: DataTypes.STRING(255) },
+  descricao: { type: DataTypes.TEXT },
   metodo_aquisicao: { type: DataTypes.STRING(30) },
   reservado: { type: DataTypes.BOOLEAN, defaultValue: false },
   foto_url: { type: DataTypes.TEXT, allowNull: true}
