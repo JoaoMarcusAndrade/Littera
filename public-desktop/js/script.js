@@ -44,35 +44,50 @@ function updateCartCount() {
   if (countEl) countEl.textContent = count;
 }
 
-function addToCart(book, qty) {
+function addToCart(livro) {
   const user = getLoggedUser();
   if (!user) {
-    openPopup();
+    openPopup(); // usuário não logado → abre popup
     return;
   }
 
   const cart = getCart();
-  const existing = cart.find(item => item.title === book.title && item.authors?.join() === book.authors?.join());
-  if (existing) {
-    existing.quantity += qty;
+
+  // procurar se o livro já existe no carrinho
+  const existente = cart.find(item => 
+    item.titulo === livro.titulo ||
+    item.title === livro.title
+  );
+
+  if (existente) {
+    // se já existe, só aumenta a quantidade
+    existente.quantity = (existente.quantity || 1) + 1;
   } else {
-    cart.push({ ...book, quantity: qty });
+    // se não existe, cria item novo com quantity = 1
+    cart.push({
+      ...livro,
+      quantity: 1
+    });
   }
+
   saveCart(cart);
   updateCartCount();
-  // animation
+
+  // --- animação do ícone do carrinho ---
   const icon = document.getElementById('carrinho-icon');
   if (icon) {
     icon.style.transform = 'scale(1.2)';
     setTimeout(() => icon.style.transform = '', 300);
   }
-  // toast
+
+  // --- toast ---
   const toast = document.getElementById('toast');
   if (toast) {
     toast.style.display = 'block';
     setTimeout(() => toast.style.display = 'none', 2000);
   }
 }
+
 
 function renderCart() {
   const cart = getCart();

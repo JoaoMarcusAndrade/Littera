@@ -36,31 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.title = `${livro.title || 'Livro'} | Littera`;
 
-    // Controles de quantidade
-    const qtyMinus = document.querySelector('.qty-btn.minus');
-    const qtyPlus = document.querySelector('.qty-btn.plus');
-    const qtyInput = document.querySelector('.qty-input');
-
-    if (qtyMinus) {
-      qtyMinus.addEventListener('click', () => {
-        let val = parseInt(qtyInput.value) || 1;
-        if (val > 1) qtyInput.value = val - 1;
-      });
-    }
-
-    if (qtyPlus) {
-      qtyPlus.addEventListener('click', () => {
-        let val = parseInt(qtyInput.value) || 1;
-        if (val < estoque) qtyInput.value = val + 1;
-      });
-    }
-
     const btnAdd = document.querySelector('.btn-add');
     if (btnAdd) {
       btnAdd.addEventListener('click', () => {
-        const qty = parseInt(qtyInput.value) || 1;
         if (typeof addToCart === 'function') {
-          addToCart(livro, qty);
+          addToCart(livro);
         } else {
           alert('Sistema de carrinho carregando...');
         }
