@@ -30,12 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('livro-paginas').textContent =
       livro.pageCount || livro.paginas || 'Desconhecido';
 
-    document.getElementById('livro-isbn').textContent = livro.isbn || 'N/A';
+    document.getElementById('livro-isbn').textContent = livro.ISBN || 'N/A';
     document.getElementById('livro-descricao').textContent =
       livro.description || livro.descricao || 'Sem descrição disponível.';
-
-    const estoque = Math.floor(Math.random() * 5) + 1;
-    document.getElementById('livro-estoque').textContent = estoque;
 
     document.title = `${livro.title || 'Livro'} | Littera`;
 
@@ -70,8 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // 🔥 Recomendações do banco
-    carregarLivrosSimilares(livro);
+    // // 🔥 Recomendações do banco
+    // carregarLivrosSimilares(livro);
 
   } catch (err) {
     console.error('Erro ao carregar livro:', err);
