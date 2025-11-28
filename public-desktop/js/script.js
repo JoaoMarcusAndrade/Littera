@@ -13,6 +13,8 @@ export function getLoggedUser() {
 // =======================================================
 // CARRINHO - Funções globais
 // =======================================================
+
+window.openCart = openCart;
 function openCart() {
   const user = getLoggedUser();
   if (!user) {
