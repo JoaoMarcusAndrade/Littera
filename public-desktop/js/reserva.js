@@ -1,10 +1,4 @@
-function getLoggedUser() {
-    try {
-        return JSON.parse(localStorage.getItem("usuarioLogado"));
-    } catch {
-        return null;
-    }
-}
+import { getLoggedUser } from "./script";
 
 const container = document.getElementById("lista-reservas");
 const user = getLoggedUser();

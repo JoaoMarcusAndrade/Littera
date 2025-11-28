@@ -1,3 +1,5 @@
+import { getLoggedUser } from "./script";
+
 let selectedPaymentMethod = '';
 
 function openCheckoutModal() {

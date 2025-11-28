@@ -2,6 +2,14 @@
 // script.js - Versão organizada, sem duplicações e com carrosséis funcionando
 // =======================================================
 
+function getLoggedUser() {
+    try {
+        return JSON.parse(localStorage.getItem("usuarioLogado"));
+    } catch {
+        return null;
+    }
+}
+
 // =======================================================
 // CARRINHO - Funções globais
 // =======================================================

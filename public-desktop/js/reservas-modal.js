@@ -1,3 +1,5 @@
+import { getLoggedUser } from "./script";
+
 function getReservas() {
   try {
     return JSON.parse(localStorage.getItem('reservas') || '[]');

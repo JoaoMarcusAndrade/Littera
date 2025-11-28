@@ -1,3 +1,5 @@
+import { getLoggedUser } from "./script";
+
 function getCompras() {
   try {
     return JSON.parse(localStorage.getItem('compras') || '[]');
