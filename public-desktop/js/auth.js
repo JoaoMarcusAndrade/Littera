@@ -21,7 +21,7 @@ const btnCadastrar = document.getElementById("btnCadastrar") || null;
 const switchToRegister = document.getElementById("switchToRegister") || null;
 const switchToLogin = document.getElementById("switchToLogin") || null;
 
-function openPopup() {
+export function openPopup() {
   if (!popupOverlay) return;
   showLogin();
   popupOverlay.classList.add("show");

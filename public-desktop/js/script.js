@@ -1,4 +1,5 @@
-﻿// =======================================================
+﻿import { openPopup } from "./auth.js";
+// =======================================================
 // script.js - Versão organizada, sem duplicações e com carrosséis funcionando
 // =======================================================
 
@@ -14,7 +15,6 @@ export function getLoggedUser() {
 // CARRINHO - Funções globais
 // =======================================================
 
-window.openCart = openCart;
 function openCart() {
   const user = getLoggedUser();
   if (!user) {
@@ -872,7 +872,17 @@ carregarFiccao();
       });
     }
   }
+  // CARRINHO
+  const icon = document.getElementById("carrinho-icon");
+  if (icon) {
+    icon.addEventListener("click", openCart);
+  }
 
+  // FILTRO
+  const filtro = document.getElementById("openPopup");
+  if (filtro) {
+    filtro.addEventListener("change", openPopup);
+  }
 }); // FIM DOMContentLoaded
 
 // =======================================================
