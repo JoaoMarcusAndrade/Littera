@@ -3,14 +3,14 @@
 // script.js - Versão organizada, sem duplicações e com carrosséis funcionando
 // =======================================================
 
-function setCookie(nome, valor, dias = 7) {
+export function setCookie(nome, valor, dias = 7) {
   const data = new Date();
   data.setTime(data.getTime() + (dias * 24 * 60 * 60 * 1000));
   const expiracao = "expires=" + data.toUTCString();
   document.cookie = `${nome}=${valor};${expiracao};path=/`;
 }
 
-function getCookie(nome) {
+export function getCookie(nome) {
   const nomeEQ = nome + "=";
   const partes = document.cookie.split(";");
 
