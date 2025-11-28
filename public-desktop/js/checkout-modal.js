@@ -1,4 +1,4 @@
-import { getLoggedUser } from "./script";
+import { getLoggedUser } from "./script.js";
 
 let selectedPaymentMethod = '';
 

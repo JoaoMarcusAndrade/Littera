@@ -1,4 +1,4 @@
-import { getLoggedUser } from "./script";
+import { getLoggedUser } from "./script.js";
 
 const container = document.getElementById("lista-reservas");
 const user = getLoggedUser();
