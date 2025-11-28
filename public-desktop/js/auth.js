@@ -26,7 +26,7 @@ export function openPopup() {
   showLogin();
   popupOverlay.classList.add("show");
   popupOverlay.style.display = "flex";
-  document.body.style.overflow = "hidden";
+  // document.body.style.overflow = "hidden";
   setTimeout(() => {
     if (loginEmail) loginEmail.focus();
   }, 60);
@@ -55,8 +55,7 @@ window.addEventListener("popstate", () => {
 function showLogin() {
   const data = getCookie('loggedUser')
   if (data){
-    loginScreen.classList.add("hidden");
-    cadastroScreen.classList.add("hidden");
+    loginScreen.classList.remove("hidden");
   }
   if (loginScreen) loginScreen.classList.remove("hidden");
   if (cadastroScreen) cadastroScreen.classList.add("hidden");
