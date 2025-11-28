@@ -1,9 +1,9 @@
-import { getLoggedUser } from "./script.js";
+import { getCookie } from "./script.js";
 
 let selectedPaymentMethod = '';
 
 function openCheckoutModal() {
-  const user = getLoggedUser();
+  const user = getCookie();
   if (!user) {
     openPopup();
     return;

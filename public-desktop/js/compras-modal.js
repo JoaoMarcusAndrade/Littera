@@ -1,4 +1,4 @@
-import { getLoggedUser } from "./script.js";
+import { getCookie } from "./script.js";
 
 function getCompras() {
   try {
@@ -12,7 +12,7 @@ function getCompras() {
 function saveCompra(dadosCompra) {
   try {
     const compras = getCompras();
-    const usuario = getLoggedUser();
+    const usuario = getCookie();
 
     if (!usuario) {
       alert('Você precisa estar logado para finalizar a compra!');
@@ -72,7 +72,7 @@ function closeComprasModal() {
 
 function renderCompras() {
   const compras = getCompras();
-  const usuario = getLoggedUser();
+  const usuario = getCookie();
   const container = document.getElementById('compras-lista');
 
   if (!usuario) {
@@ -168,7 +168,7 @@ function renderCompras() {
 
 function updateComprasBadge() {
   const compras = getCompras();
-  const usuario = getLoggedUser();
+  const usuario = getCookie();
   
   if (!usuario) return;
 

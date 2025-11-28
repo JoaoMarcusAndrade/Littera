@@ -1,4 +1,4 @@
-import { getLoggedUser } from "./script.js";
+import { getCookie } from "./script.js";
 
 function getReservas() {
   try {
@@ -26,7 +26,7 @@ function saveReservas(reservas) {
 
 function addReserva(livro) {
   const reservas = getReservas();
-  const usuario = getLoggedUser();
+  const usuario = getCookie();
 
   if (!usuario) {
     openPopup();
@@ -83,7 +83,7 @@ function removeReserva(reservaId) {
 
 function updateReservasCount() {
   const reservas = getReservas();
-  const usuario = getLoggedUser();
+  const usuario = getCookie();
   
   if (!usuario) {
     updateReservasBadge(0);
@@ -112,7 +112,7 @@ function openReservasModal() {
   const modal = document.getElementById('reservas-modal');
   if (!modal) return;
 
-  const usuario = getLoggedUser();
+  const usuario = getCookie();
   if (!usuario) {
     openPopup();
     return;
@@ -137,7 +137,7 @@ function renderReservas() {
   
   if (!container) return;
 
-  const usuario = getLoggedUser();
+  const usuario = getCookie();
   if (!usuario) {
     container.innerHTML = '<div class="reservas-empty"><div class="reservas-empty-icon">📚</div><p>Faça login para ver suas reservas</p></div>';
     if (totalEl) totalEl.textContent = '0 reservas';

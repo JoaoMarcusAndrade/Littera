@@ -3,12 +3,24 @@
 // script.js - Versão organizada, sem duplicações e com carrosséis funcionando
 // =======================================================
 
-export function getLoggedUser() {
-    try {
-        return JSON.parse(localStorage.getItem("usuarioLogado"));
-    } catch {
-        return null;
+function setCookie(nome, valor, dias = 7) {
+  const data = new Date();
+  data.setTime(data.getTime() + (dias * 24 * 60 * 60 * 1000));
+  const expiracao = "expires=" + data.toUTCString();
+  document.cookie = `${nome}=${valor};${expiracao};path=/`;
+}
+
+function getCookie(nome) {
+  const nomeEQ = nome + "=";
+  const partes = document.cookie.split(";");
+
+  for (let parte of partes) {
+    parte = parte.trim();
+    if (parte.indexOf(nomeEQ) === 0) {
+      return parte.substring(nomeEQ.length);
     }
+  }
+  return null;
 }
 
 // =======================================================
@@ -16,7 +28,7 @@ export function getLoggedUser() {
 // =======================================================
 
 function openCart() {
-  const user = getLoggedUser();
+  const user = getCookie();
   if (!user) {
     openPopup();
     return;
@@ -879,7 +891,7 @@ carregarFiccao();
   }
 
   // FILTRO
-  const filtro = document.getElementById("openPopup");
+  const filtro = document.getElementById("loginIcon");
   if (filtro) {
     filtro.addEventListener("change", openPopup);
   }

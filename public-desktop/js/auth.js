@@ -1,5 +1,5 @@
 /* auth.js - Login/Cadastro SPA usando localStorage */
-
+import { getCookie } from './script.js'
 const popupOverlay = document.getElementById("popupOverlay") || null;
 const closePopupBtn = document.getElementById("closePopup") || null;
 const loginIcon = document.getElementById("login-icon") || null;
@@ -53,6 +53,11 @@ window.addEventListener("popstate", () => {
 
 
 function showLogin() {
+  const data = getCookie('loggedUser')
+  if (data){
+    loginScreen.classList.add("hidden");
+    cadastroScreen.classList.add("hidden");
+  }
   if (loginScreen) loginScreen.classList.remove("hidden");
   if (cadastroScreen) cadastroScreen.classList.add("hidden");
   history.pushState(null, null, "/login");

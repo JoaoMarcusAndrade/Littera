@@ -1,7 +1,7 @@
-import { getLoggedUser } from "./script.js";
+import { getCookie } from "./script.js";
 
 const container = document.getElementById("lista-reservas");
-const user = getLoggedUser();
+const user = getCookie();
 
 if (!user) {
     container.innerHTML = `<p class="sem-reservas">Você precisa estar logado para ver suas reservas.</p>`;
