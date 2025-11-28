@@ -1,5 +1,5 @@
 /* auth.js - Login/Cadastro SPA usando localStorage */
-import { getCookie } from './script.js'
+import { getCookie, setCookie } from './script.js'
 const popupOverlay = document.getElementById("popupOverlay") || null;
 const closePopupBtn = document.getElementById("closePopup") || null;
 const loginIcon = document.getElementById("login-icon") || null;
@@ -165,6 +165,7 @@ if (btnLogin) {
         alert("Bem vindo, " + data.usuario.nome_user + "!");
         closePopup();
         if (userNameDisplay) userNameDisplay.textContent = data.usuario.nome_user;
+        setCookie('loggedUser', 'true', 7);
       } else {
         alert(data || "Erro no login");
       }
